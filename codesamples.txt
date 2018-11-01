@@ -1,0 +1,2810 @@
+
+
+
+************* ReturnNewLengthUponRemovingEle.py **************
+
+class Solution(object):
+    def removeElement(self, nums, val):
+        """
+        :type nums: List[int]
+        :type val: int
+        :rtype: int
+        """
+        i = 0
+        low = 0
+        high = len(nums) - 1
+        print nums[0]
+        for j in range(low,high + 1):
+            if nums[j] != val:
+                nums[i] = nums[j]
+                i += 1
+        return i
+
+
+# print(Solution().removeElement([3,2,2,3],3))
+print(Solution().removeElement([3,2,2,3],3))
+
+
+
+
+************* RomanToIntegers.py **************
+
+class Solution(object):
+    def romanToInt(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        lookup = {
+            'I': 1,
+            'V': 5,
+            'X': 10,
+            'L': 50,
+            'C': 100,
+            'D': 500,
+            'M': 1000
+        }
+        if not s:
+            return 0
+        if s in lookup:
+            return lookup[s]
+        # All characters are same
+        if len(set(s)) == 1:
+            return lookup[s[0]] * len(s)
+
+        numeric = 0
+
+        for i in range(0,len(s) - 1):
+            if lookup[s[i]] < lookup[s[i+1]]:
+                numeric -= lookup[s[i]]
+            else:
+                numeric += lookup[s[i]]
+            # print 's[%s] = %s, numeric = %s' % (i,s[i],numeric)
+        # numeric += lookup[s[len(s) - 1]]
+        return numeric + lookup[s[-1]]
+
+
+if __name__ == '__main__':
+    print Solution().romanToInt('III')
+
+
+************* backspaceStringComp.py **************
+
+class Solution(object):
+    def backspaceCompare(self, S, T):
+        """
+        :type S: str
+        :type T: str
+        :rtype: bool
+        """
+        s1 = s2 = ""
+        if S == "#" and T == "" or T == "#" and S == "" or T == "#" and S == "#":
+            return True
+        skip = 0
+        for i in range(len(S) - 1, -1, -1):
+            if S[i] == "#":
+                skip += 1
+            elif skip:
+                skip -= 1
+            else:
+                s1 += S[i]
+        for j in range(len(T) - 1, -1, -1):
+            if T[j] == "#":
+                skip += 1
+            elif skip:
+                skip -= 1
+            else:
+                s2 += T[j]
+        print("s1",s1)
+        print("s2",s2)
+        return s1 == s2
+
+
+print(Solution().backspaceCompare("a##c","#a#c"))
+
+
+************* bestTimeToBuySellStock.py **************
+
+# Say you have an array for which the ith element is the price of a given stock on day i.
+#
+# Design an algorithm to find the maximum profit. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).
+#
+# Note: You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again).
+
+import sys
+# 1. With multiple Transaction
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        if len(prices) < 2:
+            return 0
+        if len(set(prices)) == 1 and len(prices) != 1:
+            return 0
+        i = 0
+        j = 1
+        # maximum = []
+        total = 0
+        for i in range(len(prices) - 1):
+            if prices[i+1] > prices[i]:
+                total += prices[i+1] - prices[i]
+        return total
+
+    def singleTransactionMaxProfit(self,prices):
+        if len(prices) < 2:
+            return 0
+        if len(set(prices)) == 1 and len(prices) != 1:
+            return 0
+        maxProfilt = 0
+        buy = 0
+        for sell in range(len(prices) - 1):
+            if prices[sell] < prices[buy]:
+                buy = sell
+            else:
+                maxProfilt = max(prices[sell] - prices[buy],maxProfilt)
+            print("prices[%s]=%s,prices[%s]=%s,maxProfit=%s" % (sell, prices[sell], buy, prices[buy],maxProfilt))
+        return maxProfilt
+
+# 2. With single transaction allowed
+
+print(Solution().singleTransactionMaxProfit([7,1,5,3,6,4]))
+
+
+************* binarySearch.py **************
+
+def finddNumber(array, intNumber):
+    if array:
+        if len(array) == 1:
+            pass
+        else:
+            array = sorted(array)
+            lower = 0
+            upper = len(array)
+            matched = False
+            while lower < upper:
+                x = lower + (upper - lower) // 2
+                val = array[x]
+                if intNumber == val:
+                    matched = True
+                    break
+                elif intNumber > val:
+                    if lower == x:
+                        break
+                    lower = x
+                    if val == intNumber:
+                        matched = True
+                        break
+                elif intNumber < val:
+                    upper = x
+                    if val == intNumber:
+                        matched = True
+                        break
+            return matched
+
+def binarySearch(arr,target):
+    arr = sorted(arr)
+    lower = 0
+    upper = len(arr) -1
+    while (lower <= upper):
+        mid = lower + (upper-lower) //2
+        if arr[mid] == target:
+            return True
+        elif arr[mid] < target:
+            lower = mid+1
+        else:
+            upper =mid-1
+    return False
+
+
+
+print binarySearch([1, 3, 10, 20, 35, 51, 55, 67], 69)
+# print finddNumber([1, 3, 10, 20, 35, 51, 55, 67], 69)
+
+
+
+
+
+************* binarySearchTree.py **************
+
+class Node:
+    def __init__(self,val):
+        self.value = val
+        self.leftChild = None
+        self.rightChild = None
+
+    def insert(self,data):
+        if self.value == data:
+            return False
+
+class Tree:
+    def __init__(self):
+        self.root = None
+
+    def insert(self,data):
+        if self.root is None:
+            self.root = Node(data)
+        else:
+            return self.root.insert(data)
+
+
+
+************* binaryTree.py **************
+
+#Binary tree in python
+class BinaryTree:
+	def __init__(self,root):
+		self.key = root
+		self.leftChild = None
+		self.rightChild = None
+
+	def insertLeft(self,newNode):
+		if self.leftChild == None:
+			self.leftChild = BinaryTree(newNode)
+		else:
+			t = BinaryTree(newNode) # Newnode binary tree object
+			t.leftChild = self.leftChild #current left child of tree to be pushed down
+			self.leftChild = t #new binary tree object becomes left child
+
+	def insertRight(self,newNode):
+		if self.rightChild == None:
+			self.rightChild = BinaryTree(newNode)
+		else:
+			t = BinaryTree(newNode)
+			t.rightChild = self.rightChild
+			self.rightChild = t
+
+	def getLeftChild(self):
+		return self.leftChild
+
+	def getRightChild(self):
+		return self.rightChild
+
+	def getRoot(self):
+		return self.key
+
+	def setRoot(self,root):
+		self.key = root
+
+
+
+************* climbStairs.py **************
+
+TASKLIST = ['work,0650,0730',
+            'read,1100,1115',
+            'play,1210,1250',
+            'read,1515,1530',
+            'eat,1130,1430',
+            'run,1750,1930',
+            'eat,2000,2100',
+            'play,1800,2100']
+
+# a={1,2} b={1,4} a[0] <= b[0] or b[0] <= a[0] and
+# {1,4} {2,3}
+
+# 1 Print out name of each activity
+# 2 Print name of unique activity
+# 3 Print activity and the duration of each of the activity
+# 4 Can you tell which activity overlap and how long do they overlap?
+
+
+def check_overlapping(data):
+    i = 0
+    j = 1
+    readings = {}
+    for d in data:
+        activity, start_time, end_time = d.split(',')
+        if activity not in readings:
+            readings[activity] = [(start_time, end_time)]
+        else:
+            readings[activity].append((start_time,end_time))
+
+    sorted_readings = []
+    for v in readings.values():
+        for v1 in v:
+            sorted_readings.append(v1)
+
+    sorted_readings = sorted(sorted_readings)
+    for i in range(len(sorted_readings) - 1):
+        if sorted_readings[i][1] >= sorted_readings[i+1][0]:
+            overlapping_interval = sorted_readings[i+1]
+            for k,v in readings.items():
+                if overlapping_interval in v:
+                    print "Overlapping Event = %s" %k
+
+
+def check_overlapping_two(data):
+    intervals = [d.split(',') for d in data]
+    intervals = sorted(intervals[1:],key=lambda i: i[1])
+    for i in range(len(intervals) - 1):
+        if int(intervals[i+1][1]) <= int(intervals[i][2]):
+            print "Activity (%s) is overlapping with activity (%s)" % (intervals[i+1][0],intervals[i][0])
+
+def unique_activities(data):
+    unique_activities = set()
+    for d in data:
+        activity = d.split(',')[0]
+        if activity not in unique_activities:
+            unique_activities.add(activity)
+
+    print unique_activities
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    check_overlapping_two(TASKLIST)
+    unique_activities(TASKLIST)
+
+
+
+
+************* closestSum.py **************
+
+# In arr find closest sum
+# Sum of two elements - target sum should be minimum
+import sys
+def findClosestSum(arr,target_sum):
+	left = 0
+	right = len(arr)-1
+	diff =  sys.maxint
+	res_l = 0
+	res_r = 0
+	while (left < right):
+		print abs(arr[left]+arr[right]-target_sum)
+		if abs(arr[left]+arr[right]-target_sum) < diff:
+			res_l = left
+			res_r = right
+			diff = abs(arr[left]+arr[right]-target_sum)
+		elif (arr[left] + arr[right]) > diff:
+			right-=1
+		else:
+			left-=1
+	return (res_l,res_r)
+
+print findClosestSum([10, 22, 28, 29, 30, 40],54)
+
+
+************* compressString.py **************
+
+# aaabbb a3b3
+
+def compress_string(data):
+    if not data or len(data) ==1:
+        return data
+    if len(set(data)) == len(data):
+        return data
+    output = ''
+    count = 1
+
+    for i in range(len(data)-1):
+        # print 'data[%s] = %s, data[%s] = %s' % (i,data[i],i+1,data[i+1])
+        if data[i] == data[i+1]:
+            count += 1
+        else:
+            output = output + data[i] + str(count)
+            count = 1
+    output = output + data[len(data)-1] + str(count)
+    return output
+
+
+
+
+
+
+if __name__ == '__main__':
+    data = b'aaabbb'
+    data2 = b'aaabbbccccccc'
+    data3 = b'abbbcdefgh'
+
+    print compress_string(data2)
+    print compress_string(data)
+    print compress_string(data3)
+
+
+************* consecutiveOnes.py **************
+
+def findMaxConsecutiveOnes(arr):
+    if len(arr) == 1 and arr[0] == 1:
+        return 1
+    maxNum = 0
+    ans = 0
+    low = 0
+    high = len(arr) - 1
+    for i in range(low,high):
+        if arr[i] != 1:
+            maxNum += 1
+            ans = max(ans,maxNum)
+        else:
+            maxNum = 0
+    return ans
+
+
+
+
+************* containDuplicate.py **************
+
+class Solution(object):
+    def containsDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: bool
+        """
+        if not nums:
+            return False
+        if len(nums) == 1:
+            return False
+        if len(set(nums)) == 1 and len(nums) != 1:
+            return True
+        lookup = {}
+        for num in nums:
+            if num in lookup:
+                lookup[num] += 1
+            else:
+                lookup[num] = 1
+        containsDuplicate = False
+        for k, v in lookup.items():
+            if v >= 2:
+                containsDuplicate = True
+        return containsDuplicate
+
+class Solution2(object):
+    def containsDuplicate(self, nums):
+        if not nums:
+            return False
+        if len(nums) == 1:
+            return False
+        if len(set(nums)) == 1 and len(nums) != 1:
+            return True
+        nums = sorted(nums)
+        low = 0
+        hi = len(nums) - 1
+        duplicateExist = False
+        for i in range(len(nums)):
+            duplicateExist = self.binarySearch(nums[i+1:], low, len(nums[i+1:])-1, nums[i])
+            if duplicateExist:
+                break
+        return duplicateExist
+
+    def binarySearch(self, arr, l, r, target):
+        found = False
+        print('arr=%s,target=%s' %(arr,target))
+        print('left=%s,right=%s'%(l,r))
+        while l <= r and not found:
+            mid = (l + r) // 2
+            if arr[mid] == target:
+                found = True
+                break
+            else:
+                if target < arr[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+        return found
+
+
+************* countAndSay.py **************
+
+class Solution(object):
+    def countAndSay(self, n):
+        """
+        :type n: int
+        :rtype: str
+        """
+        output = ""
+        count = 1
+        for i in range(len(n)-1):
+            if n[i+1] == n[i]:
+                count +=1
+            else:
+                output = output + str(count) + n[i]
+                count = 1
+        output = output + str(len(n)-1) + n[len(n)-1]
+        print output
+        return output
+
+Solution().countAndSay('555512122221')
+
+
+
+************* countNumberOfOnes.py **************
+
+class Solution(object):
+    def countBinarySubstrings(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+
+
+
+************* designParkingLot.py **************
+
+PARKING_EMPTY = False
+PARKING_FULL = False
+
+VECHICLE_TYPES = ['bike','compact','sedan','truck']
+
+class ParkingLot:
+    def __init__(self,slot_id,status,parking_type,vehicle):
+        """
+
+        :param slot_id: Parking Slot ID Number
+        :param status: EMPTY or OCCUPIED
+        :param parking_type: BIKE or CAR
+        :param vehicle: CAR
+        """
+        self.slot_id = slot_id
+        self.status = status
+        self.parking_type = parking_type
+        self.vehicle = vehicle
+
+    def parkVehicle(self,vehicle):
+        
+
+    def findEmptySlot(self):
+        pass
+
+class Floor:
+    def __init__(self,floor_id,floorNum,floorName,parkingSlots):
+        self.floor_id = floor_id
+        self.floorNum = floorNum
+        self.floorName = floorName
+        self.parkingSlots = parkingSlots
+
+    def emptyFloor(self):
+        pass
+
+class Vehicle:
+    def __init__(self,vehicle):
+        self.vehicle  = vehicle
+        self.vehicleType = ''
+
+    def getvehicleType(self):
+        if self.vehicle == 'hatchback':
+            self.vehicleType = 'compact'
+        elif self.vehicle == 'bike':
+            self.vehicleType = 'bike'
+        elif self.vehicle == 'sedan':
+            self.vehicleType = 'sedan'
+
+class ParkingDetails:
+    def __init__(self,vehicle,entryTime,exitTime):
+        pass
+    def CalcParkingFees(self):
+        pass
+
+class SlotSize:
+    """
+    Small => Bike Compact
+    Medium => Bike, Compact, Sedan
+    Large => Bike, Compact, Sedan, truck
+    """
+    def __init__(self,vehicleType):
+        self.slotSize = ''
+        self.vehicleType = vehicleType
+
+    def getSlotSize(self):
+        if self.vehicleType in ['bike','compact']:
+            self.slotSize = 'small'
+        elif self.vehicleType in ['bike','compact','sedan']:
+            self.slotSize = 'medium'
+        elif self.vehicleType in ['bike','compact','sedan','truck']:
+            self.slotSize = 'large'
+        return self.slotSize
+
+class FareController:
+    def __init__(self):
+        self.vehicleParkingDetails = {}
+
+    def onVehicleEntry(self):
+        pass
+    def onVehicleExit(self):
+        pass
+    def getFare(self):
+        pass
+
+
+************* designbookShelf.py **************
+
+# Design a bookshelf class for checkout transaction
+
+
+
+
+************* dogClass.py **************
+
+class Dog:
+    def __init__(self,name,breed):
+        self.name = name
+        self.breed = breed
+
+    def __repr__(self):
+        print 'Dog name (%s) breed (%s)' % (self.name,self.breed)
+
+
+dog1 = Dog(name='tommy',breed='bulldog')
+dog2 = Dog(name='chintu',breed='germanshepherd')
+
+dog1.__repr__()
+dog2.__repr__()
+
+
+************* findDuplicate.py **************
+
+class Solution(object):
+    def findDuplicate(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        lookup = {}
+        duplicates = []
+        for num in nums:
+            if num in lookup:
+                lookup[num] += 1
+            else:
+                lookup[num] = 1
+        for k,v in lookup.items():
+            if v > 1:
+                return k
+
+    def findDuplicateAlgo(self,nums):
+        if len(nums) == 1:
+            return None
+        if len(set(nums)) == 1 and len(nums) != 1:
+            return nums[0]
+
+        duplicate = None
+        # duplicate = None
+
+
+
+print(Solution().findDuplicateAlgo([1,3,4,2,6,2]))
+
+
+************* findGreaterElementThanTarget.py **************
+
+"""
+Given list is [10,20,30,40,50]
+if target = 45 then return 50
+Next great element than target
+"""
+
+def findNextGreatEle(arr,target):
+    start = 0
+    end = len(arr) - 1
+    
+findNextGreatEle([10,20,30,40,50],45)
+
+
+
+************* findMaxSubArray.py **************
+
+# 1. Brute force O(n^2)
+class Solution(object):
+    def maxSubArray(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        max_subset_arr = {}
+        if not nums:
+            return 0
+        if len(nums) == 1:
+            return nums[0]
+        if len(set(nums)) == 1:
+            if nums[0] < 0:
+                return nums[0]
+            else:
+                return nums[0] * len(nums)
+
+        for i in range(0,len(nums)):
+            for j in range(1,len(nums)):
+                if nums[i:j+1]:
+                    subset_sum = sum(nums[i:j+1])
+                    if subset_sum in max_subset_arr:
+                        max_subset_arr[subset_sum].append(nums[i:j+1])
+                    else:
+                        max_subset_arr[subset_sum] = []
+                        max_subset_arr[subset_sum].append(nums[i:j+1])
+            if nums[i] in max_subset_arr:
+                max_subset_arr[nums[i]].append(nums[i])
+            else:
+                max_subset_arr[nums[i]] = []
+                max_subset_arr[nums[i]].append(nums[i])
+        # print max_subset_arr
+        max_val = max(max_subset_arr.keys())
+
+        return max_val
+
+# 2. Kadane's algo
+# the largest sum of subarray must be the
+# array[i] or array[i] + prev_array
+class Solution2(object):
+    def maxSubArray(self,nums):
+        max_current = max_global = nums[0]
+        for i in range(1,len(nums)):
+            print 'nums[%s] = %s, max_current=%s' % (i,nums[i],max_current)
+            max_current = max(nums[i],nums[i]+max_current)
+            if max_current > max_global:
+                max_global = max_current
+        return max_global
+
+
+
+
+print Solution2().maxSubArray([-2,1,-3,4,-1,2,1,-5,4])
+print Solution2().maxSubArray([1,2])
+# print Solution2().maxSubArray([-64,78,56,10,-8,26,-18,47,-31,75,89,13,48,-19,-69,36,-39,55,-5,-4,-15,-37,-27,-8,-5,35,-51,83,21,-47,46,33,-91,-21,-57,0,81,1,-75,-50,-23,-86,39,-98,-29,69,38,32,24,-90,-95,86,-27,-23,-22,44,-88,3,27,9,55,-50,-80,40,5,-61,-82,-14,40,-58,35,93,-68,-26,94,3,-79,9,-88,21,19,-84,7,91,-8,84,12,-19,-13,-83,66,-80,-34,62,59,48,-98,53,-66,18,94,46,11,-73,96,-18,6,-83,91,17,38,10,9,-78,-22,77,83,89,-42,-30,-94,-98,-34,-51,63,-97,96,64,55,-93,-41,27,52,69,53,26,-71,-64,42,-80,52,-43,6,-62,-21,83,-85,-38,49,-50,8,55,-72,74,80,90,53,53,32,-15,36,90,-88,-34,37,41,91,65,76,33,61,5,90,-33,42,-54,-73,34,-16,75,83,91,7,-89,42,-36,77,-5,-83,9,80,53,-23,68,-81,90,10,-90,55,-14,19,-7,91,-14,59,33,31,62,-33,-85,37,-73,83,-78,-86,25,-15,91,97,2,-23,54,-68,53,22,-73,43,-68,-87,-25,18,31,67,-14,94,3,-81,25,-35,-37,17,79,-34,-23,-99,-43,-98,-38,-52,75,63,1,29,71,-68,-71,74,51,-40,86,-73,54,-5,70,-60,-11,-49,-64,90,-8,-25,-16,-52,40,60,-75,96,39,-13,-79,14,-73,22,-79,75,30,-51,49,-19,-15,36,-16,-60,-69,-68,-21,-4,-18,-9,-14,50,65,70,75,-17,30,99,-44,-31,-14,-46,60,-10,52,80,-35,-18,-94,-86,62,-10,49,-53,6,56,-45,62,-48,36,-47,15,-37,-81,-15,-62,-22,91,-85,33,-62,-23,86,97,66,15,54,-69,96,36,-55,36,-97,70,82,9,4,-63,-29,32,49,23,-53,88,18,8,-96,72,-23,-82,6,14,-6,-31,-12,-39,61,-58,-32,57,77,12,-7,56,-40,-48,-35,40,-35,12,-28,90,-87,-4,79,30,80,82,-20,-43,76,62,70,-30,-92,-42,7,68,-24,75,26,-70,-36,95,86,0,-52,-49,-60,12,63,-11,-20,75,84,-41,-18,41,-82,61,98,70,0,45,-83,8,-96,24,-24,-44,-24,-98,-14,39,97,-51,-60,-78,-24,-44,10,-84,44,89,67,5,-75,-73,-53,-81,64,-55,88,-35,89,-94,72,69,29,-52,-97,81,-73,-35,20,-99,13,36,98,65,69,8,81,13,-25,25,95,-1,51,-58,-5,16,-37,-17,57,-71,-35,29,75,70,53,77,51,79,-58,-51,56,31,84,54,-27,30,-37,-46,-56,14,56,-84,89,7,-43,-16,99,19,67,56,24,-68,-38,-1,-97,-84,-24,53,71,-6,-98,28,-98,63,-18,-25,-7,21,5,13,-88,-39,28,-98,68,61,-15,44,-43,-71,1,81,-39,62,-20,-60,54,33,69,26,-96,48,-69,-94,11,-11,-20,80,87,61,-29,98,-77,75,99,67,37,-38,11,93,-10,88,51,27,28,-68,66,-41,41,36,84,44,-16,91,49,71,-19,-94,28,-32,44,75,-57,66,51,-80,10,-35,-19,97,-65,70,63,86,-2,-9,94,-59,26,35,76,11,-21,-63,-21,-94,84,59,87,13,-96,31,-35,-53,-26,-84,-34,60,-20,23,58,15,-7,21,-22,67,88,-28,-91,14,-93,61,-98,-38,75,-19,-56,59,-83,-91,-51,-79,16,14,-56,90,6,-14,27,63,-91,-15,-22,-22,82,32,-54,47,-96,-69,-61,86,91,-60,-75,43,-3,-31,3,-9,-23,28,11,69,-81,31,59,25,-83,-36,-12,-75,48,42,-21,8,-26,24,-68,-23,31,-30,-60,0,-13,-36,-57,60,32,22,-49,85,-49,38,55,-54,-31,-9,70,-38,54,-65,-37,-20,76,42,64,-73,-57,95,-20,74,-57,19,-49,29,83,-7,-11,-8,-84,40,-45,-57,-45,86,-12,24,-46,-64,62,-91,-30,-74,-35,-76,44,-94,-73,86,77,7,37,-80,-74,87,48,85,-19,-85,-45,-27,31,9,-8,85,-28,79,-14,25,91,-51,10,-61,-49,74,-38,94,56,-12,57,34,71,-5,53,74,-18,-21,59,39,-30,90,-88,-99,-24,3,62,47,-40,-51,-27,-49,-26,82,-11,1,34,27,-5,-10,92,-48,-99,63,23,31,14,-94,-90,-49,44,-44,-59,33,-44,17,-64,-82,-36,-28,-57,13,0,-7,-4,88,70,-93,-7,-35,-4,-15,-6,-26,-75,93,-95,39,98,90,66,20,-54,-93,-47,-22,0,-35,-28,41,14,-8,-46,-86,84,26,-98,55,32,-29,96,-94,32,-33,-21,57,-39,-17,-27,-64,-50,-61,55,-28,-78,84,49,22,-73,-79,-37,40,12,-7,53,-26,-80,31,-94,51,-97,-98,56,34,-54,-88,-32,-17,-29,17,18,20,32,-49,91,54,-65,40,-47,-39,38,-8,-99,-73,84,30,0,-96,-38,5,32,-36,-16,-35,74,29,-23,-80,-88,47,36,29,-32,-54,79,-64,76,91,53,-71,-71,-9,-3,-93,17,-19,36,94,-38,97,-1,70,-62,82,-65,-87,11,11,-68,-1,-41,44,-71,3,89])
+
+
+************* findMaxSumPathBinaryTree.py **************
+
+# 4 ways
+# 1. Node
+# 2. left + root
+# 3. right + root
+# 4. Left + node + max through the right path
+class Node:
+	def __init__(self,data):
+		self.data = data
+		self.left = None
+		self.right = None
+
+def findMaxPath(root):
+	if root is None:
+		return 0
+
+	l = findMaxPath(root.left)
+	r = findMaxPath(root.right)
+	# maximum of 1. max(left or right) + root  OR 2.root itself
+	max_single = max(max(l,r)+root.data,root.data)
+
+	max_top = max(max_single,l+r+root.data)
+
+	# static variable to store the result
+	findMaxPath.res = max(findMaxPath.res,max_top)
+
+	return max_single
+
+def findMaxSum(root):
+	findMaxPath.res = float('-inf')
+	findMaxPath(root)
+	return findMaxPath.res
+
+
+
+
+
+************* findMinDepthOfBinaryTree.py **************
+
+# find min depth of binary tree
+class Node: 
+	def __init__(self,root):
+		self.root =root
+		self.leftChild = None
+		self.rightChild = None
+
+def findMinDepth(root):
+	q = [] # queue to keep the track of {'node':node,'depth':depth}
+	q.append({'node':root,'depth':1})
+	while (len(q)>1):
+		item = q.pop()
+		node = item['node']
+		depth = item['depth']
+		# No left or right child
+		if node.leftChild is None and node.rightChild is None:
+			return depth
+		# if left child then append left child as node and increase depth by 1
+		if node.leftChild is not None:
+			q.append({'node':node.leftChild,'depth':depth+1})
+		# if right child then append right child as node and increase depth by 1
+		if node.rightChild is not None:
+			q.append({'node':node.rightChild,'depth':depth+1})
+
+
+
+
+
+************* findMissingNumber.py **************
+
+class Solution(object):
+    def missingNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        n = len(nums)
+        sumOfn = n * (n+1) // 2
+        array_sum = sum(nums)
+        return sumOfn-array_sum
+print Solution().missingNumber([3,0,1])
+print Solution().missingNumber([9,6,4,2,3,5,7,0,1])
+
+
+
+************* findNextGreaterElement.py **************
+
+# Find a next greater element in arrary and if not exists then return -1
+# 2 ways 
+# 1. using 2 for loops
+# 2. using stack
+# [15,2,9,10] 
+# 15 --> -1
+# 2 --> 9
+# 9 --> 10
+# 10 --> -1
+
+# 1. using 2 for loops
+class Stack:
+	def __init__(self):
+		self.stack = []
+	def push(self,item):
+		self.stack.append(item)
+	def isEmpty(self):
+		if self.stack:
+			return False
+		else:
+			return True
+	def pop(self):
+		return self.stack.pop()
+	def peek(self):
+		return self.stack[len(self.stack)-1]
+	def size(self):
+		return len(self.stack)
+
+def find_next_great_ele(arr):
+	if arr:
+		for i in range(0,len(arr),1):
+			next_element = -1
+			for j in range(i+1,len(arr),1):
+				# print 'arr[i] = %s, arr[j] = %s' %(arr[i],arr[j])
+				if arr[i] < arr[j]:
+					next_element =arr[j]
+					break
+			print '%s ---> %s' %(arr[i],next_element)
+
+def find_next_grt_ele_stack(arr):
+	s = Stack()
+	# push the 1st ele to stack
+	s.push(arr[0])
+	for i in range(0,len(arr),1):
+		# assume the element is arr[i]
+		next_ele = arr[i]
+		if s.isEmpty() == False:
+			element = s.pop()
+			while element < next_ele:
+				print '%s --> %s' %(element,next_ele)
+				if s.isEmpty() == True:
+					break
+				element = s.pop()
+			if element > next_ele:
+				s.push(element)
+		s.push(next_ele)
+	while(s.isEmpty()==False):
+		element = s.pop()
+		print '%s --> -1' % element
+
+
+if __name__ == '__main__':
+	find_next_great_ele([15,2,9,10])
+	find_next_grt_ele_stack([15,2,9,10])
+
+
+
+************* findPairsWithSumEqualsToTarget.py **************
+
+def find_pairs(arr,target):
+    if len(arr) < 2:
+        return "Error"
+    lookup = {}
+    result = []
+    for a in arr:
+        diff = target - a
+        if diff > 0 and diff in lookup:
+            result.append((diff,a))
+        else:
+            lookup[diff] = a
+    # print lookup
+    return result
+
+
+def find_pairs_bs(arr,target):
+    arr = sorted(arr)
+    pairs = []
+    low = 0
+    high = len(arr) - 1
+    for i in range(low,high):
+        diff = target - arr[i]
+        j = binary_search(arr[i+1:],diff,0,len(arr[i+1:])-1)
+        # print("index=%s"%j)
+        import sys
+        if j != sys.maxint:
+            pairs.append((arr[i],arr[i+1:][j]))
+    return pairs
+
+
+def binary_search(arr,target,left,right):
+    if len(arr) == 1 and arr[0] == target:
+        return 0
+    found = False
+    import sys
+    idx = sys.maxint
+    while left <= right and not found:
+        mid = (left+right) // 2
+        if arr[mid] == target:
+            found = True
+            idx = mid
+        elif target > arr[mid]:
+            left = mid + 1
+        else:
+            right = mid - 1
+
+    return idx
+
+# print binary_search([1,2,3,4],6,1,3)
+# print(find_pairs([2,5,2,5,1,12,12,6],7))
+print(find_pairs_bs([2,5,5,1,12,12,6],3))
+
+
+
+
+************* firstUniqueCharacter.py **************
+
+# Given a string, find the first non-repeating character in it and return it's index. If it doesn't exist, return -1.
+#
+# Examples:
+#
+# s = "leetcode"
+# return 0.
+#
+# s = "loveleetcode",
+# return 2.
+
+class Solution(object):
+    def firstUniqChar(self, s):
+        """
+        :type s: str
+        :rtype: int
+        """
+        if not s:
+            return -1
+        if len(s) == 1:
+            return 0
+        if len(set(s)) == 1 and len(s) != 1:
+            return -1
+        first_nonuniq_char = ''
+        for ch in s:
+            if s.count(ch) == 1:
+                first_nonuniq_char = ch
+                break
+        if first_nonuniq_char:
+            return s.index(first_nonuniq_char)
+        else:
+            return -1
+
+class Solution2(object):
+    def firstUniqChar(self, s):
+        letters = "abcdefghijklmnopqrstuvwxyz"
+        # convert string into index array
+        # irrespective of string iteration only 26 chars only.... constant
+        idx_arr = []
+        for ltr in letters:
+            if s.count(ltr) == 1:
+                idx = s.index(ltr)
+                idx_arr.append(idx)
+        if len(idx_arr) > 1:
+            return min(idx_arr)
+        else:
+            return -1
+print Solution2().firstUniqChar('leetcode')
+print Solution2().firstUniqChar("loveleetcode")
+print Solution2().firstUniqChar("rcxfqsiahvghboalaotgiqeongprpkrrfrdkafibklraovwpbqrfraoivcvbocllvxvnnewgriubjqwjrtqxdxdjxconptbpakexogmhgoglsrobbjktffctrxdwtofmoukadsqljdqvkxxwabvcicfmnxmuqrgtxmfhmklcqbcqqcbbwtsdkhsedmbgavdemcwusfvgvwldmsejtwjhfkkujmcfddfouonamlnupenhwpapqekfrvfdbboaxjukqijtlmfxxcgmxjelvemgmwldkcwaorixxauuoidmmxhjoqruqwjkaxervxcmacqgbguufpiwofixuehkldpquhxhracftdwwwkskicmlwlbnxnogfbpijnovgvwtrwaihuwhqxollbkujdniorquwdxluovvrcpddmhduhiafxcdkhghhlujlakpudbeeptblthfutapuncdjhhepqrsjmruvmqxbnthvpmnjrhsbtcugfrpoobnoxtiirtpaebxlcpuslfblssfjxegnxksvjxtucjdbetbfsichxkesqcwdpqedbmsdcwxrquuvfkebjhpjxvchgjrkeexaorvckajpjsbthgjrvubpkalrnilrfbafeasbkfuxomlulxqfiwdjhrajdhxvupwbvibiquvaqkkwpmitrodqirjfcokaqwkeacmifxpkvmnlepbniujlepnpafhrjgdhvgrqkuiwpcftdoukfaoclnnoptebhhkbediafmqlftjuccjdijsfvratgcrxsqokfdkjihajpqkqdkphrbmncfhfmqitcsqkauwssuiqerphmaxgawvrkxjetwovpvisnxvdsvxjwobxpsqinbusgxxrsmwgrrfrmehncqodepiclsdoqcsgehbtrbvfjwaxvtlxrgehwdthqgaxjbppvggkqgwcnlavjesjhpcumuthgwgdrncfslpgxmpowbgsgwldmtisoqprnuvtwimobxlipbainabxgchwqrvbfaanfxwgcqmeustpgvciriccpagjlcbkptvlwgrudosxreodnsfprrjvtapffovuvdpeisnodjavkmfvehiuxcfaqckbwvbhqwvhdddlqtuawlhemtmpkvwbqnjfopemwvavpadtesohmcvalxqjbincsdrjgehsraaefduxoxxtgxpsllfjwukknkegelkjpheplkwgwsxtdkebkocxiavcltcljnekccflcgkqmlfxdvffcsitxgeblndawsfeaaskthifhsrxwobxsfxgtukhvcggrswxtkulffxosofmuxbgcaopedferqdumfpucikghaqssawvoofkklwxclnjpqlcochcnsndlxsciiptkdmubgonwmefacorwchjeantitwnuoovjqokrbprggpbcoligvgrhrbwoemdgkdtdtuhbtattablwmdxflndohskmctmhdhnrwgqkvcuodhfflnotemgrixrendrndcujpdpcxvlnpepvucoaxcdivjsvmfbbqtxfxudcbiakmwpppjwughaefhohqbmmtlodnqekdtedkvpmeuhhxealssddsgtvebsvtitlmqwcikpddahktbiwcrlhpvflkwbshuptnewoavvllhrtcfcoovwmcosqobwckdqtocupanlgfbcldrfrowtccistrdgmuvhephjnjtbtjnmchvjjkdksgdwejedkvetfqouxkofkhewrhaxucvdkxqocgdulvnufqnohvhjlhfqorcnevdhunhixkrkxtddwjmwmanugirdlvewiegngqposlvuwilppjfehmjxduiopfgpipvvcprhmtakrmqiabfagrtisjbbrpxcuorhxmmmtqbmgxiprbxdcxsblqfelnqoubkenvbdqlrlojtkkqqudoxcgbtqmfaeiphultqwdlhgjrtudqdecvjkudmfmiilqsbnlwivecunqrvsmpojnfjjtahbdfpdmiprmnbwuoijbhugvwrfggwpmgfwjwwmmskpokvtjqkjwmvxonvqlibnqwvlorfxaxbqjlbmfqtvnpdfhtsqwtkkviajsptdbbvsnbihgokgakmbjkhhvwqwvlgwnirqfwvxtepgwjadglickivesllspbgupuoxnhchjmjreduehdiaegtqeqvekirtbkdpseujqqeoicpkkcuuvmkktwthirgsbmxqkfkfjkixrxbdjilvxjrchnaiimoraadlpknlcqwdrcjctnwtiprjaucbcbiihpxxqcmeflglhsiuqimhkucvgmrbwxnimrsufgaxqcpolrnlacgimbdbbgojeavhbnftfwamnpkenfboudtowgfsjabimchifnxlskfuliongptnktmkadpcwkrgogdiihjedsxnjxekmpmjtcrkcqkabwgtldtrjmkoavfkjkmkafejxxbbumneqckirlussudkjfiqsrfvcqkgxmneoijxmilmrejmcxdpwipjmgaelbowrxevamwigwjxmihgbetoqptuxpegrqjdpixlcatxuufkqfjixntfnjlslgjlwndvpjfwneafamoehdnkmaswoaababruqqlcljxxhhwrrfnfxuenrobrucbewrsarbcusxefrkntwwswcxvimopunapagvehipicuufiufverqmoptaegknbdsshopisndevqakrwamsrlufobhhiqsauabaxvfixnoeadkhjlfighblprxtqbhhccflsqnjqnphlngkenodqderjctqhnealpnjvivfxtxgbfflgipvhjnwogrmwmqlrikbkvxnugncceirrkknlpdtgljruodotnllixdiphckpspuemmmmwopxcmpishdbwbaonjprwnxghrexgpatnxkstkumjrjttmhoiijitpqadgcchldwoomhwsspeerjtdqhaagngqfnvhvnbifwxsogdfibigktiptrfkoaohwgougikfmmsmpqjcpkihujixjuposcnumromeldcsofmhdrkostapleubanlbjbrgqnqpomqxgbihbtffjqbestnufiklhdlmrtxpkehbkfloaxcepqbkuhljlacjkkvxwqknnvgsulluknbmudrjkgnacvmsuafvwtbajngklrbcwetuibasnrejcphoullrrntiuvopximxloimurxmtaifmfmobuqaooaoifptxqnddjxvgnfxolatojtavddmhokbteqvnrlpfojoidteuknlkrdhhqouteobxecwqshsjeopqejkxmgooweiplgjckppllnfinqexvvrqawrgsedmqafvdfcvgdcgcasvipfppodwgcsjuokkwunjbdpkbcskjefieegjtcnmihdakvmcctrtfqqslfpgaahpjgonbbajmchlmjqdsthupdwfmmsshfptwoferklmlotkbjofperkhmiedgconcvnvleedgghnbrvlowijphwvmonbtasliktmwcogmcjjtiuipjehuabqljrovlgbxvguwqllnnsbnjhrvorlcmbbiabcrdthwwxfumrcqkkthsgnxoptktqqmdevkahvnwfgaasdwwrqqfkwwaoilfmvotbowttsfepjrmuwplqaasbsbegsodhphhkxfdaxwipmxgjssifdrxusrsxbcnapwxggaammxduitaqiinbjjougolceargwmevmhtrrruwnnjjaatnrappohgfeibdkjewbblnwmdvtnktctrxehqxkfdjsjugtuctepikchirjjkqoipbcftlrhthmldplnttxithpkucbmjxeagjdehtmovosivwigjhivtttwoajmpatlfjhrnwdrbvofcdmelvqvaahdptcjfluquhfgmogbqwwvsofcbgprknlandufsjhpmnotukvgbilgoimgmcurskwwkionpaukescpwkpxecfanxqitkjexpsfodkusrcouwrdaoombgeeautrpumdcenmicgxvndgebdhnoixrdqcvqtbgbgfskqdipdbqkfantpckdwvlbajgbjhckxthhdloajqrkbuwmhejtxbqqgcdbvmlwpejevmsxamkthdqujpjxfjxjimcwxxxmvrrbafvlxgtxovslgicqovacpqvcorqodjoxshhlxwkuqjmbncfetwtmcfddejvdxgquerobilbmligpqcbnmmrxlmvtxqhtcnqkoueekghwirrtvlgrjwbeqfcbagffeafpxhamfwnsxfmxotnkcfljspsfhcxluphfrldjbmcaqlhrrsvooqaibtwpdnveerxdcqutnxwqsmllgbwhwixhvaehgoajsxujlftcciskxapdxiqukuiinxhfogxihrgwetagaheovwdlkwencfectxmjmedcdgfenjexxdgefgqcbeckwtcufrvtardhngckwawgwnauwrmqkratnnkimmbmsuxapsmiwpwrxmjpcpkeogqibdefabisrhplhsuhwpnkabjtpqpieljrqpjlralogpejwfjfwicpklirxcfloptodgicoqjbjwndemtlojvkvlxkiqlvcshabtksaccrcukarosrocpjjjvecicpbvenuuwdpvxqrqtxumhanmhwnesbhsixdilgsrewlkxfgtrspwrwmxvikmpagaioaskmudmjuikxafmqataetckobtsrohhepmtvkkxvjarqivsjqmvlkgvkhggdqkpkkooduvmtucthgtnfwahcrlotpaqaeopwxprucnlrtnqmsqetepwihqnjixcpkgpshxoclrnrpsqxemaoillpwfturldaraaucxemacrbqimqdoqlecmomlpudnudserghpmkrxhlfqdpixulouunsccrwfmigdkpiwfewjqnibgelwmgxkqmabtmsslqkndwlnxshadbhelxembmwesdnrsdpebrrjvvrtcedtiwdqvblbkwvjrclchhenhecqitkjpsusammgjqhepckrojictbcderejsiwhnmqpjtjornsvjcwohqnenpboqjanvueufcahwtupebsopernxhsgvtjhekoeihvigetvumtscsimbctjtowrmtkvxwwvtbcmqdtpfopwuklcacdifolmrjtbruiqxkqilfgvarqmrqfflokkevhieuwdtddgllctadfinwgtjdeqsnbqanluvubkmfbhqkxwggqavtiuufrbwhwccuxrvrvxmracuqobnuxmhrpptfeafujprucgtsrjlhjabwikoxknlbdlvlvwkuuqftoeajxbcxtqxsnuioqccjujlhulchvuptrddvvxabitmonfdbsuldsqurqwpfwefdekeheswvobsqawhhqkgwfjijsaiofpkthklfmsttgrbkfgnkkverelpplbfscgdlkkranixdauplfoerqvugaxcdixxjxjklntfaxucferwtifvurbwejmiomvnmlhgdpuiwjffbkrvbouxdxbddpmkoojirnjadroaqmepajlvxpsswaxrlkeounuosoggdtqhqijaqcinmsaoovatmjowjcvrfohtlvmvmvcrtnhviboejfhggwkstfmruntmmpxqotkbxkjvmcllqkcubxhqmotencllualsmjhaobgwwoidesrmfewklmqesopxujqcqbkxxjnhxvmntgfwkxxhprtqccwqfcvjrbkvblxbxoqaxoglrhbqcdnbvdqpfldgxkqkohtchtlewcdsaluellggtmotwekjkllpvnkufcokkknmjerdcqfxmuqmpnblcgmswflxterjbftpcsagxecuasncxfaspjkgbhpjhqlbfeovfvqtcfpwxpggifiarogagsomdivlnxnnqusndvrerldijvrficasfpphwtwwjorqfjnjcsthwgtwcvcamapdgwsthixkrjkvlksbhntfgigktembwxmtshbhaqhpnxxecqrecnjbcqnleuwiugglpbrdadhofcigslrkuuoqqaasnlbohxgkgonahqowjaxksckudqsusoonocvkaqtbqmtvfbfarkbinpfrbsemotiwhjbmfrggdudscmmsopjaiisbmcfaoovfjxwvauhdboghocspgjflmgivwieiijorcoduaiviqbmvbdiucwnirbaunlcfgcdkdurrueilcxmtmhvltpcpxrsolfopxkdifcpvojroogojnwcdpemjpffuhmjedjxuxaownpiaexeqvhgmavcnxxrvjjdgshwfionxjwvktkuhntspucneanhrbmteuuidstvnkfwtnpwodkwsnceedapahukpjxpguqgkanoljnlwjmjisgipwpatllpgbrjxvfxndxdshgcofitglgiutulbnptrmsggpcrhdrvriamojqgwqkfebnxlfrfaccxjbpdgrdwxkmrhukhxbkxwqmnidbwmljecleomlptngcaqwxrkwnvchxvqpxneqgeivibbklpbmjkbpxsgxnhbqgodssdahlhuxevdhjhnnkocxkkdmixcslqckdijsgherireixobhwnmoxcbvxcnnvvmrcdwhibseuwupwsdutpouicbsjdcrtkbvpvpqqqwwaebkndfksljrdrkuaakpgscqsvnlashqtcntoshdcrmfjaebcrufgcgadmpkopflgbajhhpnvkpqjgisixbmsvvxjsvelqqfraqmjjpkjwksnunqckpmujxefghrpfjquixturojhugmdrtjijagkgvxhiwbsnxsxjeiawfshfkemgtxcfmqvfxqprcuubsfksakertvbbwuqdujhvbevglpfbjkmqsaetsbsjakmptshhgpqcbqcqduahvlttqcgnsvixvbbxaqrkcaftuwmuwpbmvxbblniaaxhtqkjcffvvhogjqfkbuiqxjgwtuaclvfxudnbitqvifalupmvqohnrcicrstthqipdgsmirdhteotdqfvrleakpoecvgflrjrpqcjlpntefiiguhslmaabbofpfbgqbgdrjdhqfolopoqpkseoprpowsghdvpghagarhhiewwpdbetcgkewjlciiedwaiutakvbmrstfdqxxtfmlnsbwfnoccshtitgfwiaufqlldqvjxdrjntgsugrwxfmwjkpwmqwvlptiopnionqjsmhtswqokupsbcwncfejcrtfehgcrmcbuamlnvtbugafjsejjjapugliuopbqivktvdjwclpndfbrtikbjnwpfecimtdlatnwtwvfvpafuamrmsqsiiauxvuosxcsfmqoluwsppmtrbaigcttelmctgmxxfuegwmtfwgfadlrrgmhrbdwnfctsqmlmvdkulsfatmnhuffvrqougqrehsvusdrbfwmwlrlftrmnrkifjtfpksvjiebquqlvpfsneqhuwdajtckqhhemljktajpphvhjciurqbptfdbuqflwkdtbdvxcpxparbwexhbjwlefxjrosmkishjochoagxreveqpfkdfxowquwpwrniopuhuxfvtmjucaonsujqpscmffakuucfpcqvkcbndjgbdepmuuujuppqtbidsljrusudbtrwjwmqgqhgfwuvxoficqxsfwueniijjkxxmcvrefglxrxggaenulexafroqkngbaksvfaefrethnokbemppbwjrbkwikjdcnbvuqmaqwjoadkkrdoglcpcikgnlanatpgrqsdgoewuxcjgwlqjrhgagonlssknnaqwsdegwcbuxkfghwtcapletxhiekpcqxpujdpajqlpoeucvmqxskvnguudkadxlfddwdeuwgnfmpqbxdfjmqonhwuwlkqlorusrctsgvfwcdaewnehqsvtqdxpikvpclkkrbejjdfkibmljctdoxkwgwvpixsdhdfdoxxsodmifhegrautwaoxmewomshxukfvbmevvsjbkqqfgboixepwapdlusukcxthkalsakgfgjqxhujdjdwcsgcixpbwacftqeniuskekumgmsfbvvdvdjulnrojxunxuhajudfwgiuahkcnldpntjsvqbluhubuwjftvmxsboqonmqfsmitrvkwowixpklcetvpsvasduqpjqpldaaxofwgpjfbqxjjjmwfrwqmnunfjppvvanjbkvueidmbcfilmkutqarpgvofiqubtjidlwcunagcdgqdeigpcwrqirdoeshojdgladwqqwqnldbqthrnvdtrecmeboindlbsrtjiptciboldrroxxpqccoroscfwpisihotdmjedvgwdxffsslbcqpsfeapqqmbujutcpovhhdsrddwrgvmrqugajwwldonhifluwuwuqfweqtasrhrakfgqxwsrsgiiljbsdkxrhudftfvnnikpujkmbgdhmeqisawtniawnrjuwjltchnvqckfmaiqsjwwfskqvwrvrkqqipdegoulvpwlstckclclnaurkekulqqcbqfpdenquafflxbfodeobagvussdddibkkqvibjflfjdntnkwjlqrdwnlasdcujwkoofwnhkngiwkrgragargkvaqgsdhbdasnvaeabohmlobidrgqlaxddpcukmsugaafgocsfbdnrdtrvdarewuaqjktkwmdswgiboqdumqcuuocegmhlswidxgrbieqgjmevaptoxwecbumalueqvmkwbipidckdjqdufwctbwjelvhbjihkgwipgiohwwrkxeumvfrslptscqlojgacgvjxommocbvblppgpfonubaefvrrlqwivafgdwdfhknqvsekenkkfvccmuhionlmcxmdkwseektrlmsaeogkochdroxmcgggwsgiokqsbqhcintpowrfgabisspfbkhfqcttemhipuxusfxqcpscoaxjharsqbokbwdvxlgwoouhjvmebqtdfajgriunctlvahogfivufxglxuljdsdwmtxxitqevbxowtvvgcmbnofabduphmrucgrttruijkindmwuujdxvucfsixqgghnilxekikbhwpjockrenkeohdthffshrmbnjragsrgxwfmhlkvahrribkktkuwttaxcqxahgrjijaepbuaigioksvcufoejpdiprktnnkidxkcgmssudicuawlcqruskfftdqlxnemxbjftkdktmhxivdugthowghehhkonaifnohhpvocvlottqgpieprukhfcdbfqgmluwlosnvitqohqkwkpvapnogsfjtaaojnnkedtapnvjntvstomfewqlnbhbsxmiimqjewcamqsqvhcqnconkhwastjjmsuupjudchiuudtvvsaneioecrgvoidtdactarsrognfxmpwenhxaodkeobdkqmogkmebxbbasibvnpvuqwqrvoqqupbvlntvikhuscvqnstwesbudvahnxeouxxoinracffarufwvkicrrtuwwokwfqogrohanahaueufiqdcjksomcebocdqruqspvhemrcbjhcwnwnohquskwelimiksxnawegjdsbxjdbmmhnqlcbmuhencnsfjjthrlekbnuiwcrxneuhnjkvbwupemcjvcmigtjgxslnatswhequpunvccnrprooxlgtntfmfignhpetdpdxodmuotvltniuxltqxuankxosruhmaotanxgrwsvmppxsukrxmvsrhpbsrndcxqswbpsfjgonuhkkgacxtodilragfprmpfhlndcbaqoxrglspgnbnpmrxmugoupurornpdndtoxpxsjtuujgbbtocqtstlwqnksnxillrshiooufqiqtilcfnwpceehbkbjdxjuldtqbfhehjebtrfhhqfhnliixjdowepijikrbuprkppmffqeucntuoolsbrjiibppbwbbmflxtsbadtxddokhnohjlkkxlhrdghsrfrcmntivvwconrogjbtgwxrunbofgwdjwexbunceicmlnfwjjvjhtwppeahxjkmqivqaanvfgwulodcphvavjbshddsxatvacvgxdnkxpsuggccsiwiiratoqcipdbghnckalekmlgllfswqwcjhdktcuwkvrvaobgsrasdsidruedxcriteohimwgwkdorffjqcdagkjigpdgdxrbovdxemxcofaesdjjsvlnuumgsfjcdremktrdncolrqrilcxakbjjepblwghpqwnrporbvneqorojnimohfvnfnkciceoqisawgcmkpabpbgioolrrkwqjmeibrrgfeecnkfrwwthtijtimsthavsxvcpssnhffsgvukkqtvbcwrebcjdtpbdhibojwbkssmuxciwiovpmllklprcuwlernuvifnoccmnbvqggglbjgkgvmkocptmfljvfpilxoqqfvrbkfbqjqtxhslkfaaedmafkmssqhanrrupejedebbfiwetwkkldwcvnlucnsfvpkaiuthtcbcbctpdtesjfcpnifotokgxgrovslaweqgbmqjjfqqgrqgwscifdfndouwnxrpwqvxigenfneddapaqtsirevhjxdxbbuvthcktrajqbsmhirubdvbwriocrarxrfsdsfredmfjkalsseltkcjfchkfekfrannqhxusvqcqrhgnhbvvqlbfqbltaqthmbxcahdfhmawvgqxfabhfoqwraxdvdcxhuhhmxfwkhwsfpxagahkbmgqgkbnlddtavwbcvkuukfedimjrtaveunmarpbcpgcwdlquclxwgungsoroxubpqkbvkkitjcvlpxkroaajaumwvgqunkmawqhpirjmhxdgbcrbjigudeblbdxnvlibanxecmmwcoepbdemtmjwwfufvouahoniujhwhfkscxjoxtekldsjapoedocvsmjpkfsmischxbidsrxtcoqekrwqjmgupnoembnwgdmubveotwppautpeenraisnxqejimsuojrtpcshsreofgmswpbpqbfaqwjvahaodditcjuwptvrbmbnhdmcaaposopakjiuttbmkcrestkwtnnqjhgtkubnhrnjxlroiwefpubpkkdxnsfdceoauwswfwusgndeqgsijxnqrqrcfktwdketxftsvwtcrwggmdsmhmuafmtbmogbeaasdscpqasbgwlmtvnbclgfpxrsbvgumgsxhvbptvrqgpbppscqlturoiupwiuangtbvfpibfrfrgivgfrphnvluqtorwxdnvtptsfmixjbxgjhcmcxjbjsphgjdiphvoadcvskcesupmtoahwaawbibmfxugfcnxeesgwkfdkhllgqliuldeumhhbqehqwfiwsdvsecfdqrjthcmuwdukourrmtmirmcpfmqnqirfrkwrkmgxtawlohcgtamgfdugvxcxgrqwiotajcteisjimhbxvmajrdidskjiolcqpuijdfothigiqopusxabfjdgmwvbqhgkvwutckvnpeeucslntrlpriaiddqjufevjsawfmqbxuecsdotocrbvpuaqaxbkvoivrdkujqpbbofjlqnujdkjfcgbxnhkxbtidwaxdnxudrcvrilwhrpndilagxvvkihsarpoiokajvlxmwgsekkrrggtgatrpjdlplacjmxnnuhifdfsihcfxfxmxgxaguhdjmrbvwxtndwwupamlxhkffpjjjlihctspnuewnjcsvrdrcqkftswkvfmlkxtsdaawwrucbndmhhfdsutfdkkxgbuorbqggnwbghplrtedmqgmkegegpxnpmqsfloulckpgopwvmwgsevcajfcmslrbnsphupnminpowswxxkhbekoesxxxkqolervwnkwpoisfhkkeegesxfqppekmhnlwjvmtvxcmebadkfjpuuovogxbiefwcrhkvodvuwietcrrxvevgcejivnrwxgdsotwxudfkxxwcbvherubcsapfsqiqvwtxlhtqamdisiljqtmdrwjrtaovfrnpxfxrqtapqgovpttroublnfvceohjwqrbdlprvwwufihchinrdannviovxqcifmeachcoccuxhuvoawkrgxjibwullgwtdxnmvcqbhfdrxqjrtpjcjrmurqgkaclagpntsmtjeilrdfclrrtklfprfgfngcljqftxtniobttpftbvqvidfnsioaijfiloxrpawnkaxfdmekwgkthnvhuisniqfconvtdmfehquqvhhjawvsqpuuobkonbgrriisnnhbxnrswaajpvdmebsmxmxugmbehpsanctnlpxejhodfedhtlxoaaxnlkenwqstumlalhuolvbextveeoutinejgkqkovquskwkomkqxbixiaitirhuaeukueoerfmdommknoabduftgfgmxespamjoqrmdmrohqdfkhonsxvqhrbowaidmpnshxauhriwscfravldmfepmkfattuungiptubvaqsmsbuavgnbukbdcjxvrraubelakvngnrxqiqqtjluxvjfebvcdbsfkhsjnwctbhkasuvqqtmjvgphsjgddlfcaihpowulnggukgiuanitlopiwjwungtpnuuxtbdgkcllrvseufidjopogclusetmrsaiuigkadcgnslrkmlipwptuevtatocuemdrtospakuagskekcswgixgxvsrelawiqwcsklpctnawipixurmwsqglsqtxtpphldqulhibpsxfmjiccwsnmikpvnatwopjwcjcrvkfmstcphdvlajmhounoswcdfpwarondffwsfwmajawrhxestdtmoxsdmngcsidrqkmcuhuqprwjuokoopkabcufecitnnenfpgeogsxknnnwmjcxibjtpicehfeapcuuwnxddgeresnntqhpgsqvwobusfnnftbovrdtgiifwxqksofurdvwxftfnivmhrbcwcjxppsvdspeaetibfpxsoigwnvdekhqhxbogutjtukthsslgigxpchhhommworrkcdbthcrxfipwqbeiulwohjbhrkgexpmojopgaigfmrjfnjlqrwupnfcgpjkwukblvsahpehglwimdrqewwkloeveihwmecrboauxlhudqxntasenumhaivxrmevoawditieewjosutpcfmgmdadhfbcfkbmnihxqgrppgjenxtgskogpdaxrtxfaeovhuenrfenjuagcjocrginiepkncijkakhflogdjaxjhnfdbvmqldcwndekuumdhgcignjgcgmwrrqhbqtahpvaqfokhkqdqrhogagcivekilpfhoxxtmpalehmndnsnufrrxoisoxewmlxuxjhhawfprxpmwkrewmpxmqwbbomredmhfaotwfhtdpnvuxooqvccennwnbjbspusfmwwubwbdvvhmmtlchaqstwhsovqxxptcggjcekxamxepcgllktdluimkpxusunusngfknlwdrdsnqbglxkbkxsxcdihmvglfrfhjmjwugbsvgdlmufknnowfsohultbesncbcvxckcmputmtmeiundsbncvtesvxrfvkwfroneanddxdmxkihalgleqrcmjnfnxmrsdpiawessucwwprexrvvfcfnkdohfjgjvpwkwnpkinqrjqwdhuorlrhtcueggtaamdsexotkfbovanqmidqrhgiggmmkgntwbxeerblcjheduwgxkimncjqomlblgxprcfemgofsuqrctkrfwrbdtkgbwarcpqldrujdfvstomntokrfchqnbatbdmmgxsaundlsvnbuqlkuoxfqxrqdonhncqlhhlncoddiihsgiewxjhvenrcdjxbofkggitlhturvnexhhbjerkltfvwhjpbtdsukjujsogfcejfjwiubmsuvnglwinaeekwdjvqmgangvrxudswqmvdaxmbrvqgsqilccvatddmrqltgipjaivnorxcpakctpwmwdfqsoqqlngjruossaafxvplijbfrrkixunjoffbvedcvgblfegrrkdxejwgepmivvfsjbcjgfkwiagmjerbghumuorgdhoubgmecsjfxqleurgnhqaovgskpjjvosxtchmwrbiqgovnirbunakqpwvsfsiknrwwjidbxmrxvfcivqpevuigdxvmxcmvbkemejcvdmkfugaocwhdxmsbjbbpmhoirhrggcbbnsuijcihhdkjkaqqresmutwanoftuthnwvwawhckmxqigrbemiasiuuiwjpmqnosnukgdhghksbvlnwvrwlsxmqwdhijbouakrwsoblxiendknakruldrsbsuqjrhqcgwltlruksowmpcknlstxwpgifjtxmdravakrkdctpvwnmlcvcwujlapfotkfdelofioaovcoxefrqwhseffxruxahbusocednwhhiomlkumatcicufasblvinmrvuwointfqpgabxdjkghvpxatscwrhcdrhowigwgqrmfocwdwhbvfpiwiwnultowfamfsdqqadhmguilcodfssfvnqbwuvjvdqnqmxsxfwxsiivefifglkwxegxdsfsjuhjbomvnijvifomngngragulubglgtrjaujhiarkpgifdnooxvpfbfxcfrxwiwpnabfdkenvddjrlxcipiisgawlhfcnrpegcmudeirwvjhmgsrroviaqpkgcpgxhpxtiwxkomwftilxspceuwpqnsstofmeumrmigfnbimkhhvrrgowbrgboapdtitvwgrcuwpotlsgqiesrgnbwhvtusrnrqmrhxamtmnmnpjbfbqsmrgmrpthnbxsrnwionvcnbwxisijallkjnkhldrmttbibostkrrnbnlikeqaiockatqtmjhsuqabcuqindudjatgnpanvsairlrhvleckkmvnixkwdvxmkgbisjjhgtolfulehatdxesqpagnjuwksgskutdgmltaacitvufbrbsvekocmdkdrrhfgnlksrqhwdvjpartgdftoojfvhcipxdaaqjtjfdjnwkvttgbwjbbmtigmdgxubtdslocjopegtablomttlajxkrgjnpjixbodxjvberjiuwunqljusrshkodmnmgcaejvdcfljlqvomgskelionemmpwueopemvewiktfleslesxjugjawdhgqdqdklsuvcxpgifasuvmmrpunctmtldmvkhxwfrdqfsauevmxmlwgagrnpsumnqimmfrbukiiooqkprijdcjdiurvfepcswqebiasgxfdmrbbilwbjmxtqbmvucovjfmgcsokfpqjhubjxcepxxgvifkefvculfoshsriasslpirbfvlkmnicirctpdrxghvwwxlniptbfdbcjwdlanlbbdgksolxeravrdsruatkaxreleejdxilcmmahukmvnavpvwteukpatqolponolgpdvnfexevibnxbnbuithhnoxqkxqxqrponnjkuotluhpcglbtjvltakhthutwcrbxxtpxmbvomvvpgpabglgcjwghdhhsldnujjbdoqcffvrvrjmfilqnoculfgmudxtkugvhbluqrwrfikoigwbejgdqfkjmsntthrusgcsqhqopcqvrqmawrkbgldqrbofpcugnevtvalqkaelsggompoxlisxuhaavvgdhlmqodwowapoibkefrknktvxfuvnobhkrtxjeiusemphfikxkjhtbegqsblekvhudfwgwiscmeowjdmsshtrbemcovufakosmaconrbxfoctdlcmgsxwrswupigiqwvkvujcbfrjaufvmgdewkuekwgpgddmumsufcmdrucivvgguhptjhijlqldcvktjjgsnbmxffnldkeeklvbpkfnvbvqegkdchcsmjpooaiukkbiouxgrsbchqeglpvuefendlpcufurtfekbbmbhhohcoqfigsiclvlcotrgvcloufjlduuajldocjusgboksgeiclfvparknmxdjxfvrxpcmhekmcvujwaoiomrlinqlrcklgvwpmdxukfisngbaewdhwwrjbfptmdpjxekjrpudchlhtjbpchqpsnvstlahnklulkbbwskaxcmtswdhxdeqsawwnvdgnwotswmwtoausnspdmqidkqlgoulrthisjpovjdaajpnrrwshvxiwmdxgiglgpuwnjwoslvivuovwwpuuprrajgndwnveilxhpvkdmdflppuxmooldwsjijltqicdnetgtjcgevqijhiwdtxvrvmbsldpviaupoduvfpvtrxfeqtjcfhrbgfqhnvaonbfwcoanwqxakfdgkeckuhoskxwpoiemwnpjimbspnumohiaemiebogvbkubpunvtlskporvohmhgpgcpclgmmaskmahxrbrnlhhxthotuojjddetolqfcejwpephpskunmjbttvhpejqgbfpbimcxssetgkppwoxkdafgvbcfnrcfpotbsqolcevgiaojxpxjsecvfelqchicfaqijnxoejbkiaedmtectvrptudxbmjmsbogvdnjahhhiedpvsnovcbvpcckdqoeqjmkwcctgxilhcaucokthmdnjwgsqcpbwslmnclvwbtiulwdtomeldpckqcojmdlekduqsdnrervrptdajtwixmripuxuessckstqlhnvcjlfnpebiodgisemnnlstgxbsdiovcvdrurapdwwdwcfnlcxaueebvjpcmlaiklukbxstpkaksmnxudxrrsbwpb")
+
+
+************* fizzbuzz.py **************
+
+class Solution(object):
+    def fizzBuzz(self, n):
+        """
+        :type n: int
+        :rtype: List[str]
+        """
+        arr = []
+        for i in range(1,n+1,1):
+            if (i%3==0) and not (i%3==0 and i%5==0) and not (i%5==0):
+                i = 'Fizz'
+            elif (i%5==0) and not (i%3==0 and i%5==0) and not (i%3==0):
+                i = 'Buzz'
+            elif (i%3==0 and i%5==0):
+                i='FizzBuzz'
+            arr.append(i)
+
+        return arr
+
+print Solution().fizzBuzz(1)
+                
+
+
+
+************* happyNumber.py **************
+
+class Solution(object):
+    def isHappy(self, n):
+        """
+        :type n: int
+        :rtype: bool
+        """
+        self.squareSum(n)
+
+    def squareSum(self,number):
+        sum = 0
+        for n in str(number):
+            sum += pow(int(n),2)
+        if sum == 1:
+            return True
+        else:
+            self.squareSum(sum)
+
+
+print(Solution().squareSum(19))
+
+
+
+
+
+
+
+
+************* hotPotato.py **************
+
+# Implement a queue and solve hotpotato/musical chair problem
+
+class Queue:
+	def __init__(self):
+		self.items = []
+	def enqueue(self,item):
+		self.items.insert(0,item)
+	def dequeue(self):
+		return self.items.pop()
+	def isEmpty(self):
+		if self.items:
+			return False
+		else:
+			return True
+	def size(self):
+		return len(self.items)
+
+	def printqueue(self):
+		return self.items
+
+def hotPotato(names,num):
+	q = Queue()
+	for name in names:
+		q.enqueue(name)
+	print q.printqueue()
+
+	while q.size() > 1:
+		for i in range(num):
+			q.enqueue(q.dequeue())
+			print 'after enqueue', q.printqueue()
+		q.dequeue()
+
+	return q.dequeue()
+
+
+if __name__ == '__main__':
+	print hotPotato(["Bill","David","Susan","Jane","Kent","Brad"],7)
+
+
+************* houseRobber.py **************
+
+class Solution(object):
+    def rob(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+
+        if len(nums) == 1:
+            return nums[0]
+        if len(nums) == 2:
+            return max(nums)
+        i = 0
+        j = 1
+        summation = 0
+        sums = []
+        memo = {}
+        for i in range(0,len(nums) ):
+            for j in range(1,len(nums) ):
+                print("nums[%s]=%s,nums[%s]=%s" % (i,nums[i],j,nums[j]))
+                if j == i+1 or j == i-1:
+                    i = 0
+                    j = 1
+                else:
+                    summation = summation + nums[i] + nums[j]
+            print summation
+            summation = 0
+
+        print sums
+
+
+print(Solution().rob([2,1,1,2]))
+
+
+************* interesectionOfArrays.py **************
+
+def intersection(arr1,arr2):
+	map_dict = {}
+	result =[]
+	for a in arr1:
+		if a not in map_dict:
+			map_dict[a] = 1
+		else:
+			map_dict[a] += 1
+
+	for a in arr2:
+		print map_dict
+		if a in map_dict and map_dict[a] > 0:
+			result.append(a)
+			map_dict[a]-=1
+		print 'after',map_dict
+
+
+	print result
+
+
+class Solution(object):
+	def intersection(self, nums1, nums2):
+		"""
+        :type nums1: List[int]
+        :type nums2: List[int]
+        :rtype: List[int]
+        """
+		if nums1 == nums2:
+			return nums1
+		lookup = {}
+		result = []
+		for num in nums1:
+			if num in lookup:
+				lookup[num] += 1
+			else:
+				lookup[num] = 1
+		print(lookup)
+		for num in nums2:
+			if num in lookup and lookup[num] > 0:
+				result.append(num)
+				lookup[num] -= 1
+		return list(set(result))
+
+print(Solution().intersection([1,2,2,1],[2,2]))
+print(Solution().intersection([4,9,5],[9,4,9,8,4]))
+
+
+************* linkedList.py **************
+
+# Each node in linkedlist has 2 attributes
+# 1. What data is stored in node?
+# 2. What will be next element?
+
+
+class ListNode:
+    def __init__(self,data=None,next=None):
+        self.data = data
+        self.next = next
+
+
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None  # Will be derived from ListNode class
+
+    def __repr__(self):
+        # Return a list
+        nodes = []
+        curr = self.head
+        while curr:
+            nodes.append(repr(curr))
+            curr = curr.next
+        return nodes
+
+    def prepend(self,data):
+        # Prepend some data at the begining
+        self.head = ListNode(data=data,next=self.head)
+
+    def append(self,data):
+        curr = self.head
+        while curr.next:
+            curr = curr.next
+        curr.next = ListNode(data)
+        
+
+# class ListNode:
+#     """
+#     A node in a singly-linked list.
+#     """
+#     def __init__(self, data=None, next=None):
+#         self.data = data
+#         self.next = next
+#
+#     def __repr__(self):
+#         return repr(self.data)
+#
+#
+# class SinglyLinkedList:
+#     def __init__(self):
+#         """
+#         Create a new singly-linked list.
+#         Takes O(1) time.
+#         """
+#         self.head = None
+#
+#     def __repr__(self):
+#         """
+#         Return a string representation of the list.
+#         Takes O(n) time.
+#         """
+#         nodes = []
+#         curr = self.head
+#         while curr:
+#             nodes.append(repr(curr))
+#             curr = curr.next
+#         return '[' + ', '.join(nodes) + ']'
+#
+#     def prepend(self, data):
+#         """
+#         Insert a new element at the beginning of the list.
+#         Takes O(1) time.
+#         """
+#         self.head = ListNode(data=data, next=self.head)
+#
+#     def append(self, data):
+#         """
+#         Insert a new element at the end of the list.
+#         Takes O(n) time.
+#         """
+#         if not self.head:
+#             self.head = ListNode(data=data)
+#             return
+#         curr = self.head
+#         while curr.next:
+#             curr = curr.next
+#         curr.next = ListNode(data=data)
+#
+#     def find(self, key):
+#         """
+#         Search for the first element with `data` matching
+#         `key`. Return the element or `None` if not found.
+#         Takes O(n) time.
+#         """
+#         curr = self.head
+#         while curr and curr.data != key:
+#             curr = curr.next
+#         return curr  # Will be None if not found
+#
+#     def remove(self, key):
+#         """
+#         Remove the first occurrence of `key` in the list.
+#         Takes O(n) time.
+#         """
+#         # Find the element and keep a
+#         # reference to the element preceding it
+#         curr = self.head
+#         prev = None
+#         while curr and curr.data != key:
+#             prev = curr
+#             curr = curr.next
+#         # Unlink it from the list
+#         if prev is None:
+#             self.head = curr.next
+#         elif curr:
+#             prev.next = curr.next
+#             curr.next = None
+#
+#     def reverse(self):
+#         """
+#         Reverse the list in-place.
+#         Takes O(n) time.
+#         """
+#         curr = self.head
+#         prev_node = None
+#         next_node = None
+#         while curr:
+#             next_node = curr.next
+#             curr.next = prev_node
+#             prev_node = curr
+#             curr = next_node
+#         self.head = prev_node
+
+
+************* longestCommonSubSeq.py **************
+
+# longest common subsequence between two strings
+# ABCDGH and 'AEDFHR' => ADH
+# Formula => If last chars are same 1+ LCS(x,y,m-1,n-1)
+#		  => Else max(LCS(x,y,m-1,n),LCS(x,y,m,n-1))
+
+def longestsubseq(x,y):
+	# 1. declare array of length of x and y
+	m = len(x)
+	n = len(y)
+	L = [ [0]*(n+1) for i in xrange(m+1)]
+	for i in range(m+1):
+		for j in range(n+1):
+			if i==0 and j ==0:
+				L[i][j] =0
+			elif x[i-1] == y[j-1]:
+				L[i][j] = 1 + L[i-1][j-1]
+			else:
+				L[i][j] = max(L[i-1][j],L[i][j-1])
+	return L[m][n]
+
+print longestsubseq('ABCDGH','AEDFHR')
+
+
+************* longestIncreasingSubSeq.py **************
+
+def find_longest_increasing_sub(arr):
+    if len(arr) == 1 or not arr:
+        return arr
+    result = []
+    i = 0
+    j = 1
+    for i in range(i,len(arr)):
+        for j in range(j,len(arr)):
+            print 'arr[%s] = %s , arr[%s] = %s' %(i,arr[i],j,arr[j])
+            if arr[j] > arr[i]:
+                result.append(arr[i])
+                i += 1
+                j += 1
+            else:
+
+                i = 1
+                j = 0
+        if arr[i] > arr[i-1]:
+            result.append(arr[i])
+    return result
+
+
+
+if __name__ == '__main__':
+    print find_longest_increasing_sub([10,22,9,33,50,60,80])
+
+
+
+
+
+
+************* majorityElement.py **************
+
+class Solution(object):
+    def majorityElement(self, nums):
+        major = nums[0]
+        count = 1
+        for i in range(len(nums) - 1):
+            if count == 0:
+                count += 1
+                major = nums[i]
+            elif major == nums[i]:
+                count += 1
+            else:
+                count -= 1
+        return major
+
+
+print(Solution().majorityElement([2,2,1,1,1,2,2]))
+
+
+************* maxDepthOfBT.py **************
+
+
+
+
+************* maxProfit.py **************
+
+# Say you have an array for which the ith element is the price of a given stock on day i.
+
+# If you were only permitted to complete at most one transaction (i.e., buy one and sell one share of the stock), design an algorithm to find the maximum profit.
+
+# Note that you cannot sell a stock before you buy one.
+
+# Example 1:
+
+# Input: [7,1,5,3,6,4]
+# Output: 5
+# Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+#              Not 7-1 = 6, as selling price needs to be larger than buying price.
+# Example 2:
+
+# Input: [7,6,4,3,1]
+# Output: 0
+# Explanation: In this case, no transaction is done, i.e. max profit = 0.
+
+class Solution(object):
+    def maxProfit(self, prices):
+        """
+        :type prices: List[int]
+        :rtype: int
+        """
+        differences = []
+        profit = 0
+        j = 0
+        for i in range(0,len(prices)-1):
+        	print 'prices[%s]:%s, prices[%s]:%s'  %(i,prices[i],j,prices[j])
+        	if prices[i] - prices[j] < 0:
+        		j=i
+        	else:
+        		profit = max(prices[i]-prices[j],profit)
+        		print '--> profit',profit
+        return profit
+
+
+print Solution().maxProfit([1,2])
+print Solution().maxProfit([7,1,5,3,6,4])
+
+
+
+
+************* mergeSortedArray.py **************
+
+class Solution(object):
+    def merge(self, nums1, m, nums2, n):
+        """
+        :type nums1: List[int]
+        :type m: int
+        :type nums2: List[int]
+        :type n: int
+        :rtype: void Do not return anything, modify nums1 in-place instead.
+        """
+
+
+
+************* mergeSortedLists.py **************
+
+class Solution(object):
+    def merge(self, nums1, nums2):
+        """
+        Space O(m+n)
+
+        :type nums1: List[int]
+        :type m: int
+        :type nums2: List[int]
+        :type n: int
+        :rtype: void Do not return anything, modify nums1 in-place instead.
+        """
+        n1 = len(nums1)
+        n2 = len(nums2)
+        merged_list = [None] * (n1+n2)
+        i = 0
+        j = 0
+        k = 0
+        while i < n1 and j < n2:
+            if nums1[i] < nums2[j]:
+                if merged_list[k-1] != nums1[i]:
+                    merged_list[k] = nums1[i]
+                    i += 1
+                    k += 1
+            else:
+                if merged_list[k-1] != nums2[j]:
+                    merged_list[k] = nums2[j]
+                    j += 1
+                    k += 1
+
+        while i < n1:
+            if merged_list[k-1] != nums1[i]:
+                merged_list[k] = nums1[i]
+                k += 1
+                i += 1
+
+        while j < n2:
+            if merged_list[k-1] != nums2[j]:
+                merged_list[k] = nums2[j]
+                k += 1
+                j += 1
+
+        return merged_list
+
+print(Solution().merge([1,2,3,4],[2,3,4]))
+
+
+
+************* mergingSortedArrays.py **************
+
+"""
+Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.
+
+Example:
+
+Input: 1->2->4, 1->3->4
+Output: 1->1->2->3->4->4
+"""
+
+
+
+
+************* moveZerors.py **************
+
+# Given an array nums, write a function to move all 0's to the end of it while maintaining the relative order of the non-zero elements.
+
+# Example:
+
+# Input: [0,1,0,3,12]
+# Output: [1,3,12,0,0]
+# Note:
+
+# You must do this in-place without making a copy of the array.
+# Minimize the total number of operations.
+
+class Solution(object):
+    def moveZeroes(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        j = 0 
+        for i in range(len(nums)):
+        	if nums[i] != 0:
+        		nums[j] = nums[i]
+        		j+=1
+       	print 'j',j
+       	print nums
+        while j < len(nums):
+        	nums[j] = 0
+        	j += 1
+        # print nums
+
+Solution().moveZeroes( [0,1,0,3,12])
+Solution().moveZeroes( [0,1])
+
+
+
+************* multiTable.py **************
+
+def print_multiplication_table(max=1):
+    i = 1
+    print "-" * max * 5
+    while i < max + 1:
+        n = 1
+        while n <= max:
+            print "%4d" % (i * n)
+            n += 1
+        print ""
+        i += 1
+    print "-" * max * 5
+
+
+print_multiplication_table(30)
+
+
+
+************* needleHaystack.py **************
+
+# coding=utf-8
+"""
+Implement strStr().
+
+Return the index of the first occurrence of needle in haystack, or -1 if needle is not part of haystack.
+
+Example 1:
+
+Input: haystack = "hello", needle = "ll"
+Output: 2
+Example 2:
+
+Input: haystack = "aaaaa", needle = "bba"
+Output: -1
+Clarification:
+
+What should we return when needle is an empty string? This is a great question to ask during an interview.
+
+For the purpose of this problem, we will return 0 when needle is an empty string. This is consistent to C's strstr() and Java's indexOf().
+Have you considered these scenarios?
+   i.
+ii. iii.
+iv. v.
+Below is a
+needle or haystack is empty. If needle is empty, always return 0. If haystack is empty, then there will always be no match (return –1) unless needle is also empty which 0 is returned.
+needle’s length is greater than haystack’s length. Should always return –1. needle is located at the end of haystack. For example, “aaaba” and “ba”. Catch
+possible off-by-one errors.
+needle occur multiple times in haystack. For example, “mississippi” and
+“issi”. It should return index 2 as the first match of “issi”.
+Imagine two very long strings of equal lengths = n, haystack = “aaa...aa” and needle = “aaa...ab”. You should not do more than n character comparisons, or else your code will get Time Limit Exceeded in OJ.
+"""
+
+def needle_haystack()
+
+
+
+
+************* operationsString.py **************
+
+# A Dynamic Programming based Python program for edit
+# distance problem
+def editDistDP(str1, str2, m, n):
+    # Create a table to store results of subproblems
+    dp = [[0 for x in range(n + 1)] for x in range(m + 1)]
+
+    # Fill d[][] in bottom up manner
+    for i in range(m + 1):
+        for j in range(n + 1):
+
+            # If first string is empty, only option is to
+            # isnert all characters of second string
+            if i == 0:
+                dp[i][j] = j  # Min. operations = j
+
+            # If second string is empty, only option is to
+            # remove all characters of second string
+            elif j == 0:
+                dp[i][j] = i  # Min. operations = i
+
+            # If last characters are same, ignore last char
+            # and recur for remaining string
+            elif str1[i - 1] == str2[j - 1]:
+                dp[i][j] = dp[i - 1][j - 1]
+
+                # If last character are different, consider all
+            # possibilities and find minimum
+            else:
+                dp[i][j] = 1 + min(dp[i][j - 1],  # Insert
+                                   dp[i - 1][j],  # Remove
+                                   dp[i - 1][j - 1])  # Replace
+
+    return dp[m][n]
+
+
+************* palindromeCheckUsingDequeue.py **************
+
+# Palindrome checker using Dequeue
+# Double ended queue
+class DeQueue:
+	def __init__(self):
+		self.items = []
+	def addFront(self,item):
+		self.items.append(item)
+	def addRear(self,item):
+		self.items.insert(0,item)
+	def removeFront(self):
+		return self.items.pop()
+	def removeRear(self):
+		return self.items.pop(0)
+	def isEmpty(self):
+		if self.items:
+			return False
+		else:
+			return True
+	def __repr__(self):
+		print self.items
+	def size(self):
+		return len(self.items)
+
+
+def checkPalindrome(string):
+	chq = DeQueue()
+	for s in string:
+		chq.addRear(s)
+	chq.__repr__()
+	palindrome = True
+	while chq.size() > 1 and palindrome:
+		front = chq.removeFront()
+		rear = chq.removeRear()
+		if front != rear:
+			palindrome = False
+	return palindrome
+
+if __name__ == '__main__':
+	print checkPalindrome('radar')
+	print checkPalindrome('toot')
+	print checkPalindrome('chintan')
+
+
+
+
+************* productExceptSelf.py **************
+
+class Solution(object):
+    def productExceptSelf(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[int]
+        """
+        if len(nums) == 1:
+            return []
+        if len(set(nums)) == 1 and len(nums) != 1:
+            return [1*pow(nums[0],len(nums)-1) for i in nums]
+
+        low = 0
+        high = len(nums) - 1
+        product = [1]*len(nums)
+        print product
+
+
+
+Solution().productExceptSelf([1,2,3,4])
+
+
+
+
+************* quickSort.py **************
+
+# Python quick sort
+import datetime
+def quickSort(arr):
+	less = []
+	equal = []
+	greater = []
+	if len(arr) > 1:
+		pivot = arr[0]
+		for ele in arr:
+			if ele < pivot:
+				less.append(ele)
+			if ele > pivot:
+				greater.append(ele)
+			if ele == pivot:
+				equal.append(ele)
+		return sorted(less) + equal + sorted(greater)
+	else:
+		return arr
+
+arr = [12,1231,12321,1433,1230,7593,1281121,37]
+start = datetime.datetime.now()
+print quickSort(arr)
+print 'quick sort time taken ', datetime.datetime.now() - start
+start = datetime.datetime.now()
+print sorted(arr)
+print 'quick sort time taken ', datetime.datetime.now() - start
+
+
+
+************* removeDuplicates.py **************
+
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        low = 0
+        hi = len(nums) - 1
+        result = []
+        for i in range(len(nums)):
+            # print nums[i]
+            duplicateExists = self.search(nums,i+1,hi,nums[i])
+            if not duplicateExists:
+                result.append(nums[i])
+        return result
+
+    def search(self,arr,l,r,target):
+        found = False
+        # print arr
+        while l <= r and not found:
+            mid = (l + r) // 2
+            # print 'arr[%s]=%s, arr[%s]=%s' %(l,arr[l],r,arr[r])
+            if arr[mid] == target:
+                found = True
+            else:
+                if target < arr[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+        return found
+
+print Solution().removeDuplicates([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,3,3,3,3,22,22])
+
+
+
+class Solution2(object):
+    def removeDuplicates(self, nums):
+        lookup = {}
+        result = []
+        if not nums:
+            return []
+        if len(nums) == 1:
+            return nums
+        if len(set(nums)) == 1 and len(nums) != 1:
+            result.append(nums[0])
+            return result
+
+        for num in nums:
+            if num in lookup:
+                pass
+            else:
+                lookup[num] = 1
+                result.append(num)
+
+        return nums
+
+print Solution2().removeDuplicates([1,1,2])
+
+class Solution3(object):
+    #In-place
+    def removeDuplicates(self,nums):
+        if not nums:
+            return []
+        if len(nums) == 1:
+            return nums
+        low = 0
+        high = len(nums) - 1
+        index = 1
+        for i in range(low,high):
+            if nums[i] != nums[index]:
+                index += 1
+                nums[index] = nums[i]
+        return nums
+
+
+
+print Solution3().removeDuplicates([1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2,2,2,2,3,3,3,3,22,22])
+
+
+
+
+
+************* removeDuplicatesFromSortedArray.py **************
+
+class Solution(object):
+    def removeDuplicates(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        hi = len(nums) - 1
+        result = []
+        for i in range(len(nums)):
+            # print nums[i]
+            duplicateExists = self.search(nums,i+1,hi,nums[i])
+            if not duplicateExists:
+                result.append(nums[i])
+        return result
+
+    def search(self,arr,l,r,target):
+        found = False
+        # print arr
+        while l <= r and not found:
+            mid = (l + r) // 2
+            # print 'arr[%s]=%s, arr[%s]=%s' %(l,arr[l],r,arr[r])
+            if arr[mid] == target:
+                found = True
+            else:
+                if target < arr[mid]:
+                    r = mid - 1
+                else:
+                    l = mid + 1
+        return found
+
+
+class Solution2(object):
+    def removeDuplicates(self,nums):
+        if len(nums) == 1:
+            return nums
+        if len(set(nums)) == 1:
+            return list(set(nums))
+        low = 0
+        hi = len(nums) - 1
+        swapped = 1
+        for i in range(low,hi):
+            if nums[i-1] < nums[i]:
+                nums[i],nums[i-1] = nums[i-1],nums[i]
+        return nums
+
+class SetSolution(object):
+    def removeDuplicates(self,nums):
+        if len(nums) == 1:
+            return nums
+        if len(set(nums)) == 1 and len(nums) != 1:
+            return list(set(nums))
+        lookup = set()
+        for num in nums:
+            if num not in lookup:
+                lookup.add(num)
+
+        return list(lookup)
+
+
+print(SetSolution().removeDuplicates([0,0,1,1,1,2,2,3,3,4]))
+
+
+************* revStringUsingStack.py **************
+
+# Reverse string using Stack
+
+# 1. Implement a stack class
+# 2. Use the stack to reverse string
+
+
+class Stack:
+	def __init__(self):
+		self.stack = []
+	def push(self,item):
+		self.stack.append(item)
+	def isEmpty(self):
+		if self.stack:
+			return False
+		else:
+			return True
+	def pop(self):
+		return self.stack.pop()
+	def peek(self):
+		return self.stack[len(self.stack)-1]
+	def size(self):
+		return len(self.stack)
+
+
+def rev_string(string):
+	s = Stack()
+	if string:
+		for i in range(len(string)):
+			s.push(string[i])
+	rev_string = ''
+	for i in range(len(string)):
+		rev_string += s.pop()
+	return rev_string
+
+if __name__ == '__main__':
+	name = 'chintan'
+	print rev_string(name)
+
+
+
+
+
+************* revWordsInStringWithLetters.py **************
+
+class Solution(object):
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        # Remove leading and trailing whitespaces
+        s = s.strip()
+        if not s:
+            return ''
+        if ' ' not in s:
+            return s[::-1]
+        stack = []
+        for word in s.split():
+            stack.append(word[::-1])
+        return ' '.join(stack)
+
+
+print(Solution().reverseWords("Let's take LeetCode contest"))
+
+
+************* reverseInt.py **************
+
+# coding=utf-8
+#Question
+"""
+Given a 32-bit signed integer, reverse digits of an integer.
+
+Example 1:
+
+Input: 123
+Output: 321
+Example 2:
+
+Input: -123
+Output: -321
+Example 3:
+
+Input: 120
+Output: 21
+Note:
+Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: [−231,  231 − 1]. For the purpose of this problem, assume that your function returns 0 when the reversed integer overflows.
+"""
+def reverse_integer(num):
+    if num < -2**31 or num > (2**31-1):
+        return 0
+    if len(str(num)) == 1:
+        return num
+    else:
+        if num < 0:
+            # Negative Numbers
+            rev = str(num)[1:][::-1]
+            return int('-'+rev)
+        else:
+            # Positive Numbers
+            return int(str(num)[::-1])
+
+
+if __name__ == '__main__':
+    print reverse_integer(123)
+    print reverse_integer(9)
+    print reverse_integer(0)
+    print reverse_integer(-123123124)
+    print reverse_integer(120)
+    print reverse_integer(1534236469)
+
+
+
+
+
+************* reverseStack.py **************
+
+# Reverse Stack
+
+class Stack:
+	def __init__(self):
+		self.stack = []
+	def push(self,item):
+		self.stack.append(item)
+	def isEmpty(self):
+		if self.stack:
+			return False
+		else:
+			return True
+	def pop(self):
+		return self.stack.pop()
+	def peek(self):
+		return self.stack[len(self.stack)-1]
+	def size(self):
+		return len(self.stack)
+
+
+************* reverseVowels.py **************
+
+class Solution(object):
+    def reverseVowels(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        vowels = {'a','e','i','o','u','A','E','I','O','U'}
+        low = 0
+        high = len(s) - 1
+        s = list(s)
+        while low < high:
+            if s[low] in vowels and s[high] in vowels:
+                s[low],s[high] = s[high],s[low]
+                low += 1
+                high -= 1
+            elif s[low] not in vowels:
+                low += 1
+            elif s[high] not in vowels:
+                high -= 1
+        return ''.join(s)
+
+
+#chantin
+print(Solution().reverseVowels("chintan"))
+
+
+************* reverseWordsInString.py **************
+
+"""
+6. Reverse Words in a String
+Code it now: https://oj.leetcode.com/problems/reverse-words-in-a-string/ Difficulty: Medium, Frequency: High Question:
+Given an input string s, reverse the string word by word.
+For example, given s = "the sky is blue", return "blue is sky the".
+Example Questions Candidate Might Ask:
+Q: What constitutes a word?
+A: A sequence of non-space characters constitutes a word.
+Q: Does tab or newline character count as space characters?
+A: Assume the input does not contain any tabs or newline characters.
+Q: Could the input string contain leading or trailing spaces?
+A: Yes. However, your reversed string should not contain leading or trailing spaces.
+Q: How about multiple spaces between two words?
+A: Reduce them to a single space in the reversed string.
+"""
+
+
+def reverse_words_in_string(source):
+    if source and len(source) == 1:
+        return source
+    elif source:
+        reverse_string = source.split(' ')
+        reverse_string.reverse()
+        return ' '.join(reverse_string)
+        # for i in range(len(source)):
+        #     if source[i] == ' ':
+        #         j = i
+        #         print 'j (%s) i (%s)' %(j,i)
+        #     elif i==0 or source[i-1] == ' ':
+        #         if len(reverse_string) != 0:
+        #             reverse_string.append(' ')
+        #         reverse_string.append(source[i:j])
+        # print reverse_string
+
+# time complexity : O(n)
+# Remove
+def test(input):
+    if input == ' ':
+        print 'going'
+        return input.strip()
+
+def rev_words_in_string(source,debug=False):
+    if source and len(source) == 1:
+        return source
+    elif source:
+        i=0
+        string_list = []
+        for j in range(len(source)):
+            if source[j] == ' ' and j != 0:
+                string_list.append(source[i:j])
+                if debug:
+                    print 'i --> %s, j --> %s' %(i,j)
+                i = j
+                if debug:
+                    print 'After (i=j) i --> %s, j --> %s' %(i,j)
+            elif source[j] != ' ' and j == len(source)-1:
+                string_list.append(source[i:j+1])
+        string_list = [x.strip(' ') for x in string_list]
+        string_list.reverse()
+        return ' '.join(string_list)
+
+
+class Solution(object):
+    # Reverse words in string
+    def reverseWords(self, s):
+        """
+        :type s: str
+        :rtype: str
+        """
+        if ' ' not in s:
+            return s[::-1]
+        stack = []
+        j = 0
+        for i in range(len(s) - 1):
+            if s[i] == ' ' and (i != 0):
+                stack.append(s[j:i].strip())
+                j = i
+            elif s[i] != ' ' and i == len(s) - 1:
+                stack.append(s[j:i+1].strip())
+        stack.append(s[j:len(s)].strip())
+        print stack
+        return ' '.join([i for i in stack[::-1] if i])
+
+
+
+
+
+print(Solution().reverseWords('chitnan is good'))
+
+print(Solution().reverseWords('       '))
+
+
+
+#print reverse_words_in_string('the sky is blue')
+# print test(input=' ')
+# print rev_words_in_string('the sky is blue')
+# print rev_words_in_string(' the sky is blue ')
+# print rev_words_in_string('the sky is blue ')
+# print rev_words_in_string(' the sky is blue')
+# print rev_words_in_string('  the sky is blue')
+# print rev_words_in_string('  a1213  ')
+
+
+************* robotReturnToOrigin.py **************
+
+# There is a robot starting at position (0, 0), the origin, on a 2D plane. Given a sequence of its moves, judge if this robot ends up at (0, 0) after it completes its moves.
+#
+# The move sequence is represented by a string, and the character moves[i] represents its ith move. Valid moves are R (right), L (left), U (up), and D (down). If the robot returns to the origin after it finishes all of its moves, return true. Otherwise, return false.
+#
+# Note: The way that the robot is "facing" is irrelevant. "R" will always make the robot move to the right once, "L" will always make it move left, etc. Also, assume that the magnitude of the robot's movement is the same for each move.
+
+class Solution(object):
+    def judgeCircle(self, moves):
+        """
+        :type moves: str
+        :rtype: bool
+        """
+        if not moves:
+            return True
+        i = 0
+        j = 0
+        for move in moves:
+            if move == 'R':
+                i += 1
+            elif move == 'L':
+                i -= 1
+            elif move == 'U':
+                j += 1
+            elif move == 'D':
+                j -= 1
+            else:
+                return 'Invalid Move'
+
+        if i == 0 and j == 0:
+            return True
+        else:
+            return False
+
+
+print(Solution().judgeCircle('R'))
+print(Solution().judgeCircle('UD'))
+print(Solution().judgeCircle('LR'))
+print(Solution().judgeCircle('RL'))
+print(Solution().judgeCircle('RULD'))
+print(Solution().judgeCircle('RRDD'))
+
+
+
+
+
+
+
+
+************* singleNumber.py **************
+
+#Given a non-empty array of integers, every element appears twice except for one. Find that single one.#
+
+#Note:#
+
+#Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?#
+
+class Solution(object):
+    def singleNumber(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: int
+        """
+        lookup = {}
+        for num in nums:
+            if num in lookup:
+                lookup[num]+=1
+            else:
+            	lookup[num]=1
+        for k,v in lookup.items():
+        	if v ==1:
+        		return k
+
+# WithOut Extra Memory
+# Bit Operation
+
+# class Solution(object):
+#     def singleNumber(self, nums):
+#         if len(nums) == 1:
+#             return nums[0]
+#         if len(set(nums)) == 1 and len(nums) != 1:
+#             return []
+#         found = None
+#         nums = sorted(nums)
+#         for i in range(len(nums) - 1):
+#             if nums[i] == nums[i+1]:
+
+
+
+print Solution().singleNumber([4,1,2,1,2])
+
+
+************* stringNumbersAddition.py **************
+
+def addNumbers(num1,num2):
+    carry = 0
+    result = ''
+    diff = len(num1) - len(num2)
+    if diff > 0:
+        num2 = '0'*(len(num1)-len(num2)) + num2
+    else:
+        num1 = '0'*(len(num2)-len(num1)) + num1
+
+    low = 0
+    high = len(num1) - 1
+    # print(num1)
+    # print(num2)
+    for i in range(high,low,-1):
+        add = int(num1[i]) + int(num2[i])
+        if add >= 10:
+            if carry == 1:
+                temp = add + carry
+                if temp >= 10:
+                    result = str(temp)[1] + result
+                    carry = 1
+                else:
+                    result = str(temp) + result
+                    carry = 0
+            else:
+                temp = add
+                if temp >= 10:
+                    result = str(temp)[1] + result
+                    carry = 1
+                else:
+                    result = str(temp) + result
+                    carry = 0
+        else:
+            if carry == 1:
+                temp = add + carry
+                if temp >= 10:
+                    result = str(temp)[1] + result
+                    carry = 1
+                else:
+                    result = str(temp) + result
+                    carry = 0
+            else:
+                temp = add
+                if temp >= 10:
+                    result = str(temp)[1] + result
+                    carry = 1
+                else:
+                    result = str(temp) + result
+                    carry = 0
+    return str(int(num1[0])+int(num2[0])+carry) + result
+
+
+def addStrings(num1,num2):
+    def additionStrings(num1,num2,result,carry):
+        carry = 0
+        result = ''
+        diff = len(num1) - len(num2)
+        if diff > 0:
+            num2 = '0' * (len(num1) - len(num2)) + num2
+        else:
+            num1 = '0' * (len(num2) - len(num1)) + num1
+
+        low = 0
+        high = len(num1) - 1
+        for i in range(high,low,-1):
+            add = num1[i] + num2[i] + carry
+            if add >= 10:
+                additionStrings(num1[i],num2[i],add,1)
+            else:
+                additionStrings(num1[i],num2[i],add,0)
+
+
+def addStrings(num1,num2):
+    carry = 0
+    result = ''
+    diff = len(num1) - len(num2)
+    if diff > 0:
+        num2 = '0'*(len(num1)-len(num2)) + num2
+    else:
+        num1 = '0'*(len(num2)-len(num1)) + num1
+
+    low = 0
+    high = len(num1) - 1
+    for i in range(high,low,-1):
+        aggregate = int(num1[i]) + int(num2[i]) + carry
+        carry, remainder = divmod(aggregate, 10)
+        result = str(remainder) + result
+
+    return str(int(num1[0]) + int(num2[0]) + carry) + result
+
+
+
+# print addition('123412','5678')
+print addStrings('123412','5678')
+
+
+************* stringToInteger.py **************
+
+class Solution(object):
+    def myAtoi(self, str):
+        """
+        :type str: str
+        :rtype: int
+        """
+        if not str:
+            return
+        ls = list(str.strip()) # Removing leading and trailing whitespaces
+        if str[0] == '-':
+            sign = -1
+        else:
+            sign = 1
+        if ls[0] in ['-','+']:
+            del ls[0]
+        ret = i = 0
+        while i < len(ls) and ls[i].isdigit():
+            ret = ret * 10 + int(ls[i])
+            i += 1
+        return max(-2**31,min(sign*ret,2**31))
+
+
+print Solution().myAtoi('-123')
+
+
+
+
+
+************* stringatoi.py **************
+
+# Author: Chintan Vadgama
+# To convert the string to integer value
+import sys
+"""
+1. Check for signs in first place
+2. If string starts with whitespaces then after whitespace the first letter should be sign +/-
+3. if whitespaces inside string then return error
+4. i
+"""
+max_val = 2**31 - 1
+min_val = - 2**31 -1
+
+def convert_string_to_number(string):
+    sign = 1
+    for ltr in string:
+        if ltr and ltr == '+':
+            sign = 1
+        elif ltr and ltr == '-':
+            sign = -1
+
+    num = 0
+    for ltr in string:
+        if ltr and ltr.isdigit():
+            num = num * 10 + int(ltr)
+    return num * sign
+
+
+print convert_string_to_number('+1234') #s
+print convert_string_to_number('-1234') #s
+print convert_string_to_number('1234') #success
+print convert_string_to_number('1 234') #error
+print convert_string_to_number('1+234') #error
+print convert_string_to_number('xsasd112') #error
+
+
+
+
+
+************* twoSum.py **************
+
+"""
+Question:
+Given an array of integers, find two numbers such that they add up to a specific target
+number.
+The function twoSum should return indices of the two numbers such that they add up to
+the target, where index1 must be less than index2. Please note that your returned answers
+(both index1 and index2) are not zero-based.
+You may assume that each input would have exactly one solution.
+"""
+
+
+def find_target_sum(listOfInt,target):
+    if listOfInt and len(listOfInt) == 1:
+        print 'Only one element in the list'
+        return
+    else:
+        pairs = []
+        for i in listOfInt:
+            var = target - i
+            if var in listOfInt:
+                pairs.append((listOfInt.index(var),listOfInt.index(i)))
+        return set(pairs)
+
+
+def find_target_sum_dict(listOfInt,target):
+    # 1. Use dictionary to store the {element:index}
+    map = {}
+    for ele in listOfInt:
+        map[ele] = listOfInt.index(ele)
+
+    # 2. find target-ele in keys of dict
+    pairs = []
+    for ele in listOfInt:
+        complement = target-ele
+        if complement in map:
+            pairs.append((listOfInt.index(complement),
+                          listOfInt.index(ele)))
+    return set(pairs)
+
+class Solution(object):
+    def twoSum(self,listOfInt,target):
+        if len(listOfInt) < 2:
+            return 0
+        low = 0
+        high = len(listOfInt) - 1
+        while (listOfInt[low] + listOfInt[high]) != target:
+            if listOfInt[low] + listOfInt[high] < target:
+                low += 1
+            else:
+                high -= 1
+        return [low+1, high+1]
+
+
+print(Solution().twoSum([0,0,3,4],0))
+print(Solution().twoSum([2, 7, 11, 15],9))
+
+
+
+************* twoSumSorted.py **************
+
+# coding=utf-8
+"""
+2. Two Sum II – Input array is sorted
+Code it now: Coming soon! Difficulty: Medium, Frequency: N/A
+Question:
+Similar to Question [1. Two Sum], except that the input array is already sorted in
+ascending order.
+Solution:
+Of course we could still apply the [Hash table] approach, but it costs us O(n) extra space,
+plus it does not make use of the fact that the input is already sorted.
+"""
+
+
+
+************* uniqueMorseRepresentation.py **************
+
+class Solution(object):
+    def uniqueMorseRepresentations(self, words):
+        """
+        :type words: List[str]
+        :rtype: int
+        """
+        morse_words = [".-","-...","-.-.","-..",".","..-.","--.","....","..",".---","-.-",".-..","--","-.","---",".--.","--.-",".-.","...","-","..-","...-",".--","-..-","-.--","--.."]
+        morse_encoded_strings = []
+        for word in words:
+            morse_word = ''
+            for ch in word:
+                idx = ord(ch) - ord('a')
+                morse_word += morse_words[idx]
+            morse_encoded_strings.append(morse_word)
+
+        unique = set(morse_encoded_strings)
+        return len(unique)
+
+
+print Solution().uniqueMorseRepresentations(["gin", "zen", "gig", "msg"])
+
+
+
+************* validNumber.py **************
+
+# coding=utf-8
+"""
+9. Valid Number
+Code it now: https://oj.leetcode.com/problems/valid-number/
+Question:
+Validate if a given string is numeric. Some examples:
+"0"  true "0.1"  true "abc"  false
+Example Questions Candidate Might Ask:
+Difficulty: Easy, Frequency: Low
+  Q: How to account for whitespaces in the string?
+A: When deciding if a string is numeric, ignore both leading and trailing whitespaces.
+Q: Should I ignore spaces in between numbers – such as “1 1”?
+A: No, only ignore leading and trailing whitespaces. “1 1” is not numeric.
+Q: If the string contains additional characters after a number, is it considered valid?
+A: No. If the string contains any non-numeric characters (excluding whitespaces and decimal point), it is not numeric.
+Q: Is it valid if a plus or minus sign appear before the number? A: Yes. “+1” and “-1” are both numeric.
+Q: Should I consider only numbers in decimal? How about numbers in other bases such as hexadecimal (0xFF)?
+A: Only consider decimal numbers. “0xFF” is not numeric.
+Q: Should I consider exponent such as “1e10” as numeric?
+A: No. But feel free to work on the challenge that takes exponent into consideration. (The Online Judge problem does take exponent into account.)
+1. => Valid
+.1 => Valid
+0.1 => valid
+121.12 => valid
+123.asdsa => not valid
+"""
+
+
+def check_valid_number(num):
+    if isinstance(num,str) and num:
+        isNumeric = False
+        for i in range(len(num)):
+            if num.isdigit():
+                isNumeric = True
+    else:
+        print 'Empty String !'
+        return
+
+
+if __name__ == '__main__':
+    check_valid_number('')
+    print 'Expected => valid'
+    print check_valid_number('123')
+    print 'Expected => Not '
+    print check_valid_number('3.xxxx')
+    print 'Expected => valid'
+    print check_valid_number('1.')
+    print 'Expected => valid'
+    print check_valid_number('.1')
+    print 'Expected => valid'
+    print check_valid_number('123.1234')
+    print 'Expected => valid'
+    print check_valid_number('+123.1234')
+
+
+
+
+************* validPalindorme.py **************
+
+class Solution(object):
+    def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        if not s:
+            return True
+        dq = []
+        for ch in s:
+            if ch and not ch.isalnum():
+                dq.append(ch)
+        print dq
+Solution().isPalindrome('A man, a plan, a canal: Panama')
+
+
+************* validPalindrome.py **************
+
+"""
+4. Valid Palindrome
+Code it now: https://oj.leetcode.com/problems/valid-palindrome/ Difficulty: Easy, Frequency: Medium
+Question:
+Given a string, determine if it is a palindrome, considering only alphanumeric characters
+and ignoring cases.
+For example,
+"A man, a plan, a canal: Panama" is a palindrome.
+"race a car" is not a palindrome.
+Example Questions Candidate Might Ask:
+Q: What about an empty string? Is it a valid palindrome?
+A: For the purpose of this problem, we define empty string as valid palindrome.
+"""
+
+
+def check_valid_palindrome(string):
+    if string:
+        if len(string) == 1:
+            print 'String %s is a valid palindrome' % string
+            return
+        else:
+            string = [x.lower() for x in string]
+            i = 0
+            j = 0
+
+            while i <= j:
+                while i < j and not string[i].isalnum():
+                    i+=1
+                while i < j and not string[j].isalnum():
+                    j-=1
+                if i <= j:
+                    if string[i] != string[j]:
+                        return False
+                    else:
+                        i +=1
+                        j -=1
+                if i > j:
+                    return True
+
+
+class Solution(object):
+    def isPalindrome(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        if not s:
+            return True
+        s =s.lower()
+        dq = []
+        for ch in s:
+            if ch and ch.isalnum():
+                dq.append(ch)
+        left = 0
+        right = len(dq)-1
+        while left < right and len(dq) > 1:
+            first = dq.pop(0)
+            last = dq.pop()
+            if first != last:
+                return False
+        return True
+        
+
+print Solution().isPalindrome('A man, a plan, a canal: Panama')
+
+# print check_valid_palindrome('race a car')
+# print check_valid_palindrome('A man, a plan, a canal: Panama')
+# print check_valid_palindrome('A man, a plan, a canal: P')
+
+
+# arr = [1,3, 10, 20, 35, 51, 55, 67]
+# intNumber  = 10
+
+
+
+************* validParenthesses.py **************
+
+# class Solution(object):
+#     def isValid(self, s):
+#         """
+#         :type s: str
+#         :rtype: bool
+#         """
+#         stack = []
+#         balanced = True
+#         idx =0
+#         while idx < len(s) and balanced:
+#         	if s[idx] in '[(<{':
+#         		stack.append(s[idx])
+#         	else:
+#         		if len(stack) == 0:
+#         			balanced = False
+#         		else:
+#         			symbol = stack.pop()
+#         			if symbol in '])>}':
+#         	idx = idx+1
+#        	if balanced and len(stack) ==0:
+#        		return True
+#        	else: 
+#        		return False
+
+def matches(s1,s2):
+	openers = '[(<{'
+	closers =  '])>}'
+	open_idx =0
+	close_idx=0
+
+class Solution2(object):
+    def isValid(self, s):
+        """
+        :type s: str
+        :rtype: bool
+        """
+        lookup = {
+        			'[':']',
+        			'{':'}',
+        			'(':')',
+        			'<':'>'
+        			}
+
+        ch_counts = {}
+        balanced = True
+        for ch in s:
+        	if ch in ch_counts:
+        		ch_counts[ch] +=1
+        	else:
+        		ch_counts[ch] = 1
+        print ch_counts
+        for ch,count in ch_counts.items():
+        	if ch in lookup:
+        		opening_bracket_cnt = count
+        		closing_bracket = lookup[ch]
+        		if closing_bracket not in ch_counts:
+        			return False
+        		else:
+        			closing_bracket_cnt = ch_counts[closing_bracket]
+        			if opening_bracket_cnt != closing_bracket_cnt:
+        				balanced = False
+        return balanced
+
+class Solution(object):
+    def isValid(self, s):
+        # print len(s)
+        # if len(s) % 2 == 1: return False
+        dic = {'(' : ')', '{' : '}', '[' : ']'}
+        stack = []
+        for char in s:
+            if char in dic:   
+                stack.append(char)
+            else:
+                if not stack or dic[stack.pop()] != char:
+                    return False
+        print stack
+        return not stack
+
+# print Solution().isValid('[chintan]')
+print Solution().isValid('[c]')
+
+
+
+************* wiggleSort.py **************
+
+class Solution(object):
+    def wiggleSort(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: void Do not return anything, modify nums in-place instead.
+        """
+        if len(nums) == 1:
+            return nums
+        if len(set(nums)) == 1 and len(nums) != 1:
+            return set(nums)
+        low = 0
+        high = len(nums) - 1
+        for i in range(low,high):
+            print("nums[%s]=%s,nums[%s]=%s,nums[%s]=%s" %(i,nums[i],i+1,nums[i+1],i+2,nums[i+2]))
+            if nums[i+1] < nums[i]:
+                nums[i],nums[i+1] = nums[i+1],nums[i]
+            elif nums[i+2] > nums[i+1]:
+                nums[i+2],nums[i+1] = nums[i+1],nums[i+2]
+            else:
+                i -= 1
+            print nums
+        return nums
+
+
+print Solution().wiggleSort([1, 5, 1, 1, 6, 4])
